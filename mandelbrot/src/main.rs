@@ -15,6 +15,7 @@ fn main() {
 
 
 /// Determine if `c` is in the Mandelbrot set, using at most `limit` iterations.
+///
 /// Returns none if `c` seems to be in the Mandlebrot set, or the number of
 /// iterations needed to escape if not.
 fn escape_time(c: Complex<f64>, limit: usize) -> Option<usize> {
@@ -52,6 +53,7 @@ fn test_parse_complex() {
 
 
 /// Generic function to parse string into a pair of values.
+///
 /// Type `T` must implement FromStr trait, `separator` must be ASCII.
 fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
     match s.find(separator) {
@@ -72,4 +74,70 @@ fn test_parse_pair() {
     assert_eq!(parse_pair::<i32>("10,20xy", ','), None);
     assert_eq!(parse_pair::<f64>("0.5x", 'x'), None);
     assert_eq!(parse_pair::<f64>("0.5x1.5", 'x'), Some((0.5, 1.5)));
+}
+
+
+/// Convert from pixel coordinates to point of the complex plain.
+///
+/// `bounds` is a pair giving the width and height of the image in pixels.
+/// `pixel` is a (column, row) pair for a particular pixel, starting at top-left.
+/// `top_left` and `bottom_right` parameters are points on the complex
+/// plane designating the area our image covers.
+fn pixel_to_point(
+    bounds: (usize, usize),
+    pixel: (usize, usize),
+    top_left: Complex<f64>,
+    bottom_right: Complex<f64>,
+) -> Complex<f64> {
+    let (width, height) = (
+        bottom_right.re - top_left.re,
+        top_left.im - bottom_right.im,
+    );
+
+    let re = top_left.re + pixel.0 as f64 * width / bounds.0 as f64;
+    let im = top_left.im - pixel.1 as f64 * height / bounds.1 as f64;
+    Complex { re, im }
+}
+
+#[test]
+fn test_pixel_to_point() {
+    let bounds = (100, 200);
+
+    // Complex plane from (-1, 1) to (1, -1)
+    let top_left = Complex { re: -1.0, im: 1.0 };
+    let bottom_right = Complex { re: 1.0, im: -1.0 };
+
+    // Top-left (first pixel!)
+    assert_eq!(
+        pixel_to_point(bounds, (0, 0), top_left, bottom_right),
+        Complex { re: -1.0, im: 1.0 },
+        "Top-left pixel is incorrect",
+    );
+
+    // Top-right
+    assert_eq!(
+        pixel_to_point(bounds, (0, 200), top_left, bottom_right),
+        Complex { re: -1.0, im: -1.0 },
+        "Top-right pixel is incorrect",
+    );
+
+    // Bottom-left
+    assert_eq!(
+        pixel_to_point(bounds, (100, 0), top_left, bottom_right),
+        Complex { re: 1.0, im: 1.0 },
+        "Bottom-left pixel is incorrect",
+    );
+
+    // Bottom-right (last pixel)
+    assert_eq!(
+        pixel_to_point(bounds, (100, 200), top_left, bottom_right),
+        Complex { re: 1.0, im: -1.0 },
+        "Bottom-right pixel is incorrect",
+    );
+
+    // Somewhere in the middle
+    assert_eq!(
+        pixel_to_point(bounds, (25, 175), top_left, bottom_right),
+        Complex { re: -0.5, im: -0.75 },
+    );
 }

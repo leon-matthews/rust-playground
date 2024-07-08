@@ -1,0 +1,16 @@
+
+[package]
+name = "mandelbrot"
+version = "0.1.0"
+edition = "2021"
+authors = ["Leon Matthews"]
+description = """
+    Mandlebrot example from O'Reilly 'Programming Rust' book 2nd
+    Edition, typed-in and modified by me.
+"""
+homepage = "https://lost.co.nz/"
+
+
+[dependencies]
+image = "0.13.0"
+num = "0.4"

@@ -99,6 +99,33 @@ fn pixel_to_point(
     Complex { re, im }
 }
 
+
+/// Render a rectangle of the Mandelbrot set into a buffer of pixels.
+///
+/// `bounds` gives the width and height of the `pixels` buffer, which holds one
+/// greyscale pixel per byte. The `top_left` and `bottom_right` arguments
+/// specify points on the complex plane being rendered.
+fn render(
+    pixels: &mut [u8],
+    bounds: (usize, usize),
+    top_left: Complex<f64>,
+    bottom_right: Complex<f64>)
+{
+    assert!(pixels.len() == bounds.0 * bounds.1);
+
+    for row in 0..bounds.1 {
+        for column in 0..bounds.0 {
+            let point = pixel_to_point(bounds, (column, row), top_left, bottom_right);
+            let index = row * bounds.0 + column;
+            pixels[index] = match escape_time(point, 255) {
+                None => 0,
+                Some(count) => 255 - count as u8,
+            };
+        }
+    }
+}
+
+
 #[test]
 fn test_pixel_to_point() {
     let bounds = (100, 200);

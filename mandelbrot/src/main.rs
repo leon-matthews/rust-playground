@@ -11,7 +11,7 @@ fn main() {
     // Parse args
     let args: Vec<String> = env::args().collect();
     if args.len() != 5 {
-        eprintln!("usage: {} FILE PIXELS UPPERLEFT LOWERRIGHT", args[0]);
+        eprintln!("usage: {} FILE PIXELS TOP-LEFT BOTTOM-RIGHT", args[0]);
         eprintln!("eg. {} mandelbrot.png 1500x1000 -2.0,1.0 0.5,-1.0", args[0]);
         std::process::exit(1);
     }
@@ -24,7 +24,10 @@ fn main() {
 
     // Render and save image
     let mut pixels = vec![0; bounds.0 * bounds.1];
-    render(&mut pixels, bounds, top_left, bottom_right);
+
+    //~ render(&mut pixels, bounds, top_left, bottom_right);
+    render_multicore(&mut pixels, bounds, top_left, bottom_right);
+
     write_image(&args[1], &pixels, bounds)
         .expect("Error writing PNG file");
 }
@@ -116,6 +119,46 @@ fn pixel_to_point(
 }
 
 
+/// As per `render()`, but split problem over multiple CPU threads.
+///
+/// TODO: Use the `num_cpus` crate to determine number of CPU cores.
+/// TODO: Some bands are easier to calculate than others, but we have to wait
+///       for the slowest to finish. Better to create many more bands and
+///       feed them into a thread-pool.
+fn render_multicore(
+    pixels: &mut [u8],
+    bounds: (usize, usize),
+    top_left: Complex<f64>,
+    bottom_right: Complex<f64>,
+) {
+    let threads = 32;
+    let rows_per_band = bounds.1 / threads + 1;
+
+    // Break pixel buffer into bands
+    let bands: Vec<&mut [u8]> = pixels.chunks_mut(rows_per_band * bounds.0).collect();
+
+    // Wait for all threads to finish execution
+    crossbeam::scope(|spawner| {
+        // Grant exclusive ownership to each band
+        for (i, band) in bands.into_iter().enumerate() {
+            // Calculate bounding box
+            let top = rows_per_band * i;
+            let height = band.len() / bounds.0;
+            let band_bounds = (bounds.0, height);
+            let band_top_left = pixel_to_point(
+                bounds, (0, top), top_left, bottom_right);
+            let band_bottom_right = pixel_to_point(
+                bounds, (bounds.0, top + height), top_left, bottom_right);
+
+            // Create thread, giving it ownership of band
+            spawner.spawn(move |_| {
+                render(band, band_bounds, band_top_left, band_bottom_right);
+            });
+        }
+    }).unwrap();
+}
+
+
 /// Render a rectangle of the Mandelbrot set into a buffer of pixels.
 ///
 /// `bounds` gives the width and height of the `pixels` buffer, which holds one
@@ -125,8 +168,8 @@ fn render(
     pixels: &mut [u8],
     bounds: (usize, usize),
     top_left: Complex<f64>,
-    bottom_right: Complex<f64>)
-{
+    bottom_right: Complex<f64>,
+) {
     assert!(pixels.len() == bounds.0 * bounds.1);
 
     for row in 0..bounds.1 {

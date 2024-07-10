@@ -12,5 +12,6 @@ homepage = "https://lost.co.nz/"
 
 
 [dependencies]
+crossbeam = "0.8"
 image = "0.13.0"
 num = "0.4"

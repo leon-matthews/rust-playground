@@ -2,6 +2,7 @@
 use image::ColorType;
 use image::png::PNGEncoder;
 use num::Complex;
+//~ use std::dbg as pp;
 use std::env;
 use std::fs::File;
 use std::str::FromStr;

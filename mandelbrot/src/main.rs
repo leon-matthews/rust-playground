@@ -26,7 +26,8 @@ fn main() {
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
     //~ render(&mut pixels, bounds, top_left, bottom_right);
-    render_multicore(&mut pixels, bounds, top_left, bottom_right);
+    let cpus = num_cpus::get();
+    render_multicore(&mut pixels, bounds, top_left, bottom_right, cpus * 2);
 
     write_image(&args[1], &pixels, bounds)
         .expect("Error writing PNG file");
@@ -121,7 +122,6 @@ fn pixel_to_point(
 
 /// As per `render()`, but split problem over multiple CPU threads.
 ///
-/// TODO: Use the `num_cpus` crate to determine number of CPU cores.
 /// TODO: Some bands are easier to calculate than others, but we have to wait
 ///       for the slowest to finish. Better to create many more bands and
 ///       feed them into a thread-pool.
@@ -130,8 +130,8 @@ fn render_multicore(
     bounds: (usize, usize),
     top_left: Complex<f64>,
     bottom_right: Complex<f64>,
+    threads: usize,
 ) {
-    let threads = 32;
     let rows_per_band = bounds.1 / threads + 1;
 
     // Break pixel buffer into bands

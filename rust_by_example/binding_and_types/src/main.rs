@@ -2,10 +2,11 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
+use std::collections::HashMap;
+
 /// Rust by Example, Chapters 4 & 5
 /// https://doc.rust-lang.org/rust-by-example/variable_bindings.html
 /// https://doc.rust-lang.org/rust-by-example/types.html
-
 
 fn main() {
     // Casting
@@ -61,6 +62,12 @@ fn main() {
     vec.push('A' as u8);
     dbg!(vec);
 
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    dbg!(map);
 
     // Aliasing
     ////////////

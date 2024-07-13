@@ -2,10 +2,19 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
+use std::fmt;
+use std::num::ParseIntError;
+use std::str::FromStr;
+
+
+
 /// Conversion
 /// Rust by Example, Chapter 6
 /// https://doc.rust-lang.org/rust-by-example/conversion.html
 
+
+// From and Into
+/////////////////
 
 #[derive(Debug)]
 struct Number {
@@ -41,7 +50,35 @@ impl Into<u128> for Number {
 }
 
 
+// TryFrom and TryInto
+///////////////////////
+
+#[derive(Debug, PartialEq)]
+struct EvenNumber(i32);
+
+
+impl TryFrom<i32> for EvenNumber {
+    type Error = ();
+
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        if value % 2 == 0 {
+            Ok(EvenNumber(value))
+        } else {
+            Err(())
+        }
+    }
+}
+
+
+
+// To and From Strings
+///////////////////////
+
+
 fn main() {
+    // From and Into
+    /////////////////
+
     // str to String
     let my_str = "hello";
     let my_string = String::from(my_str);
@@ -49,7 +86,6 @@ fn main() {
     // i32 to Number
     let num = Number::from(16);
     let num2 = Number::from(32);
-    println!("My number is {:?}", num);
 
     // Number to big integers
     let big: u64 = num.into();
@@ -59,4 +95,52 @@ fn main() {
     // with a request to convert `into()` Number from a u128.
     let signed: u128 = 128;
     let num3: Number = signed.into();   // Note that type-spec is needed here
+
+
+    // TryFrom and TryInto
+    ///////////////////////
+
+    // i32 to EvenNumber. Sometimes works...
+    assert_eq!(EvenNumber::try_from(8), Ok(EvenNumber(8)));
+    assert_eq!(EvenNumber::try_from(5), Err(()));
+
+    // i32 to EvenNumber, but with `try_into()` instead
+    let result: Result<EvenNumber, ()> = 8_i32.try_into();
+    assert_eq!(result, Ok(EvenNumber(8)));
+    let result: Result<EvenNumber, ()> = 5_i32.try_into();
+    assert_eq!(result, Err(()));
+
+
+    // To and From Strings
+    ///////////////////////
+
+    #[derive(Debug)]
+    struct Circle {
+        radius: i32
+    }
+
+    impl fmt::Display for Circle {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "Circle of radius {}", self.radius)
+        }
+    }
+
+    impl FromStr for Circle {
+        type Err = ParseIntError;
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            match s.trim().parse() {
+                Ok(num) => Ok(Circle{ radius: num }),
+                Err(e) => Err(e),
+            }
+        }
+    }
+
+    let circle = Circle { radius: 6 };
+    println!("{}", circle.to_string());
+
+    let circle: Circle = " 3 ".parse().expect("Radius should be an integer");
+    dbg!(circle);
+
+    let turbo_parsed = "10".parse::<Circle>().unwrap();
+    dbg!(turbo_parsed);
 }

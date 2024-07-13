@@ -1,6 +1,8 @@
 
 fn main() {
-    // Basic if/else
+    // If/else
+    ///////////
+
     let n = 50;
     if n < 0 {
         print!("{} is negative", n);
@@ -21,4 +23,25 @@ fn main() {
         };
 
     println!("{} -> {}", n, big_n);
+
+
+    // Loops also expressions. Wild!
+    /////////////////////////////////
+    println!("Let's count until infinity!");
+
+    let mut count = 0_u32;
+    let last = loop {
+        if count == 3 {
+            println!("three");
+        } else {
+            //~ println!("{}", count);
+        }
+
+        count += 1;
+        if count >= 20 {
+            break count;
+        }
+    };
+
+    println!("OK, {} is probably enough", last);
 }

@@ -1,5 +1,9 @@
+/// Programming Rust (O'Reilly, 2nd Edition)
+/// Chapter 4: Ownership and Moves
+
 #![allow(dead_code)]
 #![allow(unused_variables)]
+
 
 use std::rc::Rc;
 

@@ -10,6 +10,7 @@ fn main() {
     consume_vector_contents();
     take_vector_contents();
     reference_counting();
+    mutable_references();
 }
 
 
@@ -93,7 +94,7 @@ fn take_vector_contents() {
 /// Reference counting to manage lifetimes
 fn reference_counting() {
     // All have type Rc<String> and share the same memory
-    let mut s = Rc::new("Teddy".to_string());
+    let s = Rc::new("Teddy".to_string());
     let t = s.clone();
     let u = s.clone();
 
@@ -102,4 +103,23 @@ fn reference_counting() {
     //~ u.push_str(" is a good boy");
 
     dbg!(s, t, u);
+}
+
+
+/// Mutable references take exclusive ownership
+fn mutable_references() {
+    // My own experiment in where and how a 'ref mute' takes ownership
+    let mut name = String::from("Leon");
+    let name_reference = &mut name;
+
+    // Cannot even read variable while 'ref mute' has borrowed:
+    // error[E0502]: cannot borrow `name` as immutable because it is also borrowed as mutable
+    println!("Name variable is {}", name);
+
+    name_reference.push('!');
+    println!("Name reference is {}", name_reference);
+
+    // Rust is smart enough to see that mute ref isn't used after above line
+    // ie. its lifetime does not necessarily extend to enclosing scope
+    println!("Name variable is {}", name);
 }

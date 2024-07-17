@@ -3,6 +3,7 @@
 
 /// Programming Rust (O'Reilly, 2nd Edition)
 /// Chapter 5: References
+
 use std::collections::HashMap;
 
 type Table = HashMap<String, Vec<String>>;

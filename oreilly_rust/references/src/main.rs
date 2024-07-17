@@ -13,6 +13,7 @@ fn main() {
     dereference();
     references_to_references();
     comparing_references();
+    references_in_structs();
 }
 
 
@@ -128,4 +129,23 @@ fn comparing_references() {
     // You *can* compare address if you really want
     assert!(rx == ry);
     assert!(!std::ptr::eq(rx, ry));
+}
+
+
+/// Structures need lifetimes to pass it to the struct
+fn references_in_structs() {
+    // We need a named lifetime here
+    // Each value created of type S gets a fresh lifetime
+    struct S<'a> {
+        r: &'a i32,
+    }
+
+    // Nesting structs? We need to pass down a lifetime
+    struct D<'a> {
+        s: S<'a>,
+    }
+
+    let x = 10;
+    let d = D{ s: S { r: &x }};
+    assert_eq!(*d.s.r, 10);
 }

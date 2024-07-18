@@ -1,0 +1,17 @@
+
+[package]
+default-run = "hello"
+edition = "2021"
+name = "hello"
+version = "0.1.0"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+
+[dependencies]
+
+
+[dev-dependencies]
+assert_cmd = "2.0"

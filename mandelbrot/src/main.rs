@@ -2,7 +2,6 @@
 use image::ColorType;
 use image::png::PNGEncoder;
 use num::Complex;
-//~ use std::dbg as pp;
 use std::env;
 use std::fs::File;
 use std::str::FromStr;
@@ -34,11 +33,12 @@ fn main() {
         .expect("Error writing PNG file");
 }
 
+/**
+Determine if `c` is in the Mandelbrot set, using at most `limit` iterations.
 
-/// Determine if `c` is in the Mandelbrot set, using at most `limit` iterations.
-///
-/// Returns none if `c` seems to be in the Mandlebrot set, or the number of
-/// iterations needed to escape if not.
+Returns none if `c` seems to be in the Mandlebrot set, or the number of
+iterations needed to escape if not.
+*/
 fn escape_time(c: Complex<f64>, limit: usize) -> Option<usize> {
     let mut z = Complex { re: 0.0, im: 0.0 };
     for i in 0..limit {
@@ -72,10 +72,11 @@ fn test_parse_complex() {
     assert_eq!(parse_complex(",-0.0625"), None);
 }
 
+/**
+Generic function to parse string into a pair of values.
 
-/// Generic function to parse string into a pair of values.
-///
-/// Type `T` must implement FromStr trait, `separator` must be ASCII.
+Type `T` must implement FromStr trait, `separator` must be ASCII.
+*/
 fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
     match s.find(separator) {
         None => None,
@@ -97,13 +98,14 @@ fn test_parse_pair() {
     assert_eq!(parse_pair::<f64>("0.5x1.5", 'x'), Some((0.5, 1.5)));
 }
 
+/**
+Convert from pixel coordinates to point of the complex plain.
 
-/// Convert from pixel coordinates to point of the complex plain.
-///
-/// `bounds` is a pair giving the width and height of the image in pixels.
-/// `pixel` is a (column, row) pair for a particular pixel, starting at top-left.
-/// `top_left` and `bottom_right` parameters are points on the complex
-/// plane designating the area our image covers.
+`bounds` is a pair giving the width and height of the image in pixels.
+`pixel` is a (column, row) pair for a particular pixel, starting at top-left.
+`top_left` and `bottom_right` parameters are points on the complex
+plane designating the area our image covers.
+*/
 fn pixel_to_point(
     bounds: (usize, usize),
     pixel: (usize, usize),
@@ -120,12 +122,13 @@ fn pixel_to_point(
     Complex { re, im }
 }
 
+/**
+As per `render()`, but split problem over multiple CPU threads.
 
-/// As per `render()`, but split problem over multiple CPU threads.
-///
-/// TODO: Some bands are easier to calculate than others, but we have to wait
-///       for the slowest to finish. Better to create many more bands and
-///       feed them into a thread-pool.
+TODO: Some bands are easier to calculate than others, but we have to wait
+      for the slowest to finish. Better to create many more bands and
+      feed them into a thread-pool.
+*/
 fn render_multicore(
     pixels: &mut [u8],
     bounds: (usize, usize),
@@ -159,12 +162,13 @@ fn render_multicore(
     }).unwrap();
 }
 
+/**
+Render a rectangle of the Mandelbrot set into a buffer of pixels.
 
-/// Render a rectangle of the Mandelbrot set into a buffer of pixels.
-///
-/// `bounds` gives the width and height of the `pixels` buffer, which holds one
-/// greyscale pixel per byte. The `top_left` and `bottom_right` arguments
-/// specify points on the complex plane being rendered.
+`bounds` gives the width and height of the `pixels` buffer, which holds one
+greyscale pixel per byte. The `top_left` and `bottom_right` arguments
+specify points on the complex plane being rendered.
+*/
 fn render(
     pixels: &mut [u8],
     bounds: (usize, usize),

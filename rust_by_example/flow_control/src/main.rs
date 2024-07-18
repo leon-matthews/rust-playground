@@ -7,14 +7,14 @@
 
 
 fn main() {
-    //~ if_else();
-    //~ while_loops();
-    //~ while_loops();
-    //~ for_loops();
-    //~ matching();
-    //~ match_destructuring();
-    //~ match_guards();
-    //~ match_binding();
+    if_else();
+    while_loops();
+    while_loops();
+    for_loops();
+    matching();
+    match_destructuring();
+    match_guards();
+    match_binding();
     if_let();
 }
 

@@ -9,8 +9,15 @@ use std::str::FromStr;
 /**
 Determine if `c` is in the Mandelbrot set, using at most `limit` iterations.
 
-Returns none if `c` seems to be in the Mandlebrot set, or the number of
-iterations needed to escape if not.
+Returns the number of iterations needed to escape, if the point was able to do so:
+
+    let point = num::Complex { re: 1.0, im: 1.0 };
+    assert_eq!(mandelbrot::escape_time(point, 100), Some(2));
+
+Otherwise `None`, if the point had still not escaped after `limit` iterations:
+
+    let point = num::Complex { re: 0.0, im: 0.0 };
+    assert_eq!(mandelbrot::escape_time(point, 100), None);
 */
 pub fn escape_time(c: Complex<f64>, limit: usize) -> Option<usize> {
     let mut z = Complex { re: 0.0, im: 0.0 };

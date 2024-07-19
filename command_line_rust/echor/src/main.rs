@@ -16,7 +16,6 @@ struct Args {
     omit_newline: bool,
 
     /// Echo text to standard output
-    #[arg(required(true))]
     text: Vec<String>,
 }
 

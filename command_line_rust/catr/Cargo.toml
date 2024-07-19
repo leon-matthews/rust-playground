@@ -1,0 +1,17 @@
+[package]
+name = "catr"
+description = "Rust implementation of GNU coreutils 'cat' command"
+authors = ["Leon Matthews"]
+homepage = "https://lost.co.nz/"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+rand = "0"

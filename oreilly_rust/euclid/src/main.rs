@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-
 use std::env;
 use std::str::FromStr;
 
@@ -19,12 +18,10 @@ fn main() {
         std::process::exit(1);
     }
 
-    // Process
-    let mut d = numbers[0];
-    for m in &numbers[1..] {
-        d = gcd(d, *m);
-    }
-    println!("Greatest common divisor of {:?} is {}", numbers, d);
+    // Process!
+    let gcd = calculate_gcd_many(&numbers)
+        .expect("Numbers must not be empty");
+    println!("Greatest common divisor of {:?} is {}", numbers, gcd);
 }
 
 
@@ -32,7 +29,7 @@ fn main() {
 ///
 /// Uses Euclid’s algorithm.
 /// https://en.wikipedia.org/wiki/Euclidean_algorithm
-fn gcd(mut n: u64, mut m: u64) -> u64 {
+fn calculate_gcd(mut n: u64, mut m: u64) -> u64 {
     assert!(m != 0 && n != 0);
     while m != 0 {
         if m < n {
@@ -44,9 +41,32 @@ fn gcd(mut n: u64, mut m: u64) -> u64 {
 }
 
 
-#[test]
-fn test_gcd() {
-    assert_eq!(gcd(97, 9973), 1);
-    assert_eq!(gcd(64, 96), 32);
+/// Find GCD of all given numbers in given slice
+fn calculate_gcd_many(numbers: &[u64]) -> Result<u64, String> {
+    if numbers.len() == 0 {
+        return Err(String::from("Cannot calculate GCD on empty slice"))
+    }
+    let mut divisor = numbers[0];
+    for next in &numbers[1..] {
+        divisor = calculate_gcd(divisor, *next);
+    }
+    Ok(divisor)
 }
 
+
+#[test]
+fn test_calculate_gcd() {
+    assert_eq!(calculate_gcd(97, 9973), 1);
+    assert_eq!(calculate_gcd(64, 96), 32);
+}
+
+#[test]
+fn test_calculate_gcd_many() {
+    let numbers = [32, 64, 128];
+    assert_eq!(calculate_gcd_many(&numbers).unwrap(), 32);
+
+    let numbers = Vec::<u64>::new();
+    let result = calculate_gcd_many(&numbers);
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "Cannot calculate GCD on empty slice");
+}

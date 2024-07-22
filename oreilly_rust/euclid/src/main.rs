@@ -1,6 +1,30 @@
+#![allow(dead_code)]
+
+
+use std::env;
+use std::str::FromStr;
+
 
 fn main() {
-    println!("{}", gcd(96, 128));
+    // Parse
+    let mut numbers = Vec::new();
+    let args = env::args();
+    for arg in args.skip(1) {
+        numbers.push(u64::from_str(&arg).expect("Error parsing integers"));
+    }
+
+    // Check
+    if numbers.len() == 0 {
+        eprintln!("Usage: gcd NUMBERS ...");
+        std::process::exit(1);
+    }
+
+    // Process
+    let mut d = numbers[0];
+    for m in &numbers[1..] {
+        d = gcd(d, *m);
+    }
+    println!("Greatest common divisor of {:?} is {}", numbers, d);
 }
 
 

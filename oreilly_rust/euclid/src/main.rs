@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 
 use std::env;
 use std::str::FromStr;
@@ -6,15 +5,15 @@ use std::str::FromStr;
 
 fn main() {
     // Parse
+    let args: Vec<String> = env::args().collect();
     let mut numbers = Vec::new();
-    let args = env::args();
-    for arg in args.skip(1) {
+    for arg in args.iter().skip(1) {
         numbers.push(u64::from_str(&arg).expect("Error parsing integers"));
     }
 
     // Check
     if numbers.len() == 0 {
-        eprintln!("Usage: gcd NUMBERS ...");
+        eprintln!("Usage: {} NUMBERS ...", args[0]);
         std::process::exit(1);
     }
 

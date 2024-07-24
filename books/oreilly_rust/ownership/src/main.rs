@@ -1,19 +1,18 @@
+#![allow(dead_code)]
+
 /// Programming Rust (O'Reilly, 2nd Edition)
 /// Chapter 4: Ownership and Moves
-
-#![allow(dead_code)]
-#![allow(unused_variables)]
-
 
 use std::rc::Rc;
 
 
 fn main() {
-    arguments_take_ownership();
-    vectors_disallow_moves();
-    consume_vector_contents();
-    take_vector_contents();
-    reference_counting();
+    //~ arguments_take_ownership();
+    //~ vectors_disallow_moves();
+    //~ consume_vector_contents();
+    //~ take_vector_contents();
+    //~ reference_counting();
+    shared_reference();
     mutable_references();
 }
 
@@ -110,18 +109,40 @@ fn reference_counting() {
 }
 
 
+/// Shared references prevent changing of variable
+fn shared_reference() {
+    // Shared Reference to non-copy value
+    //////////////////////////////////////
+    #[allow(unused_mut)]
+    let mut name = String::from("Leon");
+    let shared_reference = &name;
+
+    // Cannot rebind original name once ANY reference taken:
+    //     error[E0506]: cannot assign to `name` because it is borrowed
+    //~ name = "Matthews".to_string();
+
+    // Cannot modify original's contents either:
+    //     error[E0502]: cannot borrow `name` as mutable because it is also
+    //     borrowed as immutable
+    //~ name.push_str(" Matthews");
+
+    // Use shared reference here to extend its lifetime
+    println!("Shared reference is {}", shared_reference);
+}
+
+
 /// Mutable references take exclusive ownership
 fn mutable_references() {
-    // My own experiment in where and how a 'ref mute' takes ownership
     let mut name = String::from("Leon");
-    let name_reference = &mut name;
+    let mutable_reference = &mut name;
 
-    // Cannot even read variable while 'ref mute' has borrowed:
-    // error[E0502]: cannot borrow `name` as immutable because it is also borrowed as mutable
-    println!("Name variable is {}", name);
+    // Cannot even READ variable while 'ref mute' has borrowed:
+    //     error[E0502]: cannot borrow `name` as immutable because it is
+    //     also borrowed as mutable
+    //~ println!("Name variable is {}", name);
 
-    name_reference.push('!');
-    println!("Name reference is {}", name_reference);
+    mutable_reference.push('!');
+    println!("Mutable reference is {}", mutable_reference);
 
     // Rust is smart enough to see that mute ref isn't used after above line
     // ie. its lifetime does not necessarily extend to enclosing scope

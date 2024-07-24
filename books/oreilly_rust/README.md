@@ -9,12 +9,19 @@
 
 * [Code examples](https://github.com/ProgrammingRust)
 
+
 ## Currently
 
-Re-reading Mandlebrot example from Chapter 2 with fresh eyes to see how much
-more I understand now - and with a view to eventually refactor to use a thread
-pool and much smaller chunks of work (one row per thread invocation?).
+Work through example code in Chapter 3, *Fundamental Types*.
+
 
 ## Next
 
-Re-read Chapter 3, *Fundamental Types*.
+Work through example code in Chapter 4, *Owership*.
+
+
+## Sometime
+
+Re-read Mandlebrot example from Chapter 2 with fresh eyes to see how much
+more I understand now - and with a view to eventually refactor to use a thread
+pool and much smaller chunks of work (one row per thread invocation?).

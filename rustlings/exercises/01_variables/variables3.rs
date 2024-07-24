@@ -1,6 +1,5 @@
-fn main() {
-    // TODO: Change the line below to fix the compiler error.
-    let x: i32;
 
+fn main() {
+    let x: i32 = 1234567890;
     println!("Number {x}");
 }

@@ -1,15 +1,15 @@
-// TODO: Fix the compiler error in this function.
+
 fn fill_vec(vec: Vec<i32>) -> Vec<i32> {
-    let vec = vec;
-
+    let mut vec = vec;
     vec.push(88);
-
     vec
 }
+
 
 fn main() {
     // You can optionally experiment here.
 }
+
 
 #[cfg(test)]
 mod tests {

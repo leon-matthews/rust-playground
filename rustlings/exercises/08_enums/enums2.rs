@@ -1,21 +1,29 @@
 #![allow(dead_code)]
 
+
 #[derive(Debug)]
 struct Point {
     x: u64,
     y: u64,
 }
 
+
 #[derive(Debug)]
 enum Message {
-    // TODO: Define the different variants used below.
+    ChangeColor(u8, u8, u8),
+    Echo(String),
+    Move(Point),
+    Resize { width: u32, height: u32 },
+    Quit,
 }
+
 
 impl Message {
     fn call(&self) {
         println!("{self:?}");
     }
 }
+
 
 fn main() {
     let messages = [

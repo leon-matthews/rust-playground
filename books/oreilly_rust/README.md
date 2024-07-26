@@ -12,12 +12,12 @@
 
 ## Currently
 
-Work through example code in Chapter 3, *Fundamental Types*.
+Re-read Chapter 4, *Owership*.
 
 
 ## Next
 
-Work through example code in Chapter 4, *Owership*.
+Re-read Chapter 5, *References*.
 
 
 ## Sometime

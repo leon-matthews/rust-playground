@@ -12,12 +12,12 @@
 
 ## Currently
 
-Re-read Chapter 4, *Owership*.
+Write sample code from Chapter 18, *Input and Output*.
 
 
 ## Next
 
-Re-read Chapter 5, *References*.
+Benchmark various methods of reading and writing files against each other.
 
 
 ## Sometime

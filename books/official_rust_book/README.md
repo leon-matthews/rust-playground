@@ -1,16 +1,14 @@
 
 # The Rust Programming Language
 
-## [Website Version, 2024](https://doc.rust-lang.org/book/)
-
 *Steve Klabnik and Carol Nichol*
+
+## Resources
+[Original Website](https://doc.rust-lang.org/book/)
+[Interactive Version](https://doc.rust-lang.org/book/)
 
 
 ## Currently
 
-Working on Chapter 10, *Generic Types, Traits, and Lifetimes*.
-
-
-## Next
-
-Work on Chapter 11, *Writing Automated Tests*.
+Re-read early chapters using interactive version of website, taking their
+quizes as I go.

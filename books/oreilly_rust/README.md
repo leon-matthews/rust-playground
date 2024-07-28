@@ -12,16 +12,9 @@
 
 ## Currently
 
-Write sample code from Chapter 18, *Input and Output*.
+Re-read and write sample code from Chapter 10, *Enums and Patterns*.
 
 
 ## Next
 
-Benchmark various methods of reading and writing files against each other.
-
-
-## Sometime
-
-Re-read Mandlebrot example from Chapter 2 with fresh eyes to see how much
-more I understand now - and with a view to eventually refactor to use a thread
-pool and much smaller chunks of work (one row per thread invocation?).
+Carry on from page 245...

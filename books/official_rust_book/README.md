@@ -8,7 +8,8 @@
 [Interactive Version](https://doc.rust-lang.org/book/)
 
 
-## Currently
+## Next
 
-Re-read early chapters using interactive version of website, taking their
-quizes as I go.
+Continue reading the new Chapter 4, with quizes of course!
+
+https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html

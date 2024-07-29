@@ -12,9 +12,4 @@
 
 ## Currently
 
-Re-read and write sample code from Chapter 10, *Enums and Patterns*.
-
-
-## Next
-
-Carry on from page 245...
+Read Chapter 11, *Traits and Generics*

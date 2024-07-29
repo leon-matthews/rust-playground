@@ -6,17 +6,17 @@
 *Ken Youens-Clark*
 
 
+## Resources
+
+[Code Examples](https://github.com/kyclark/command-line-rust)
+
+
 ## Currently
 
-Just finished *catr* example program and got all tests to pass.
+Finished using the *build* API from `clap` to parse the command-line arguments.
 
-Had to manually upgrade from using v1 of the *clap* library, as used in the
-book, to the currently supported version 4.
 
 ## Next
 
-Start the *headr* project from Chapter 4.
-
-In the last project we used *clap* and its *derive* API to parse the
-command-line arguments. This time I might try using the manual, *builder* API
-instead. I should at least try both.
+Write tests for argument parsing, refactoring current approach to allow for
+testing as needed.

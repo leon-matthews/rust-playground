@@ -12,4 +12,10 @@
 
 ## Currently
 
-Read Chapter 11, *Traits and Generics*
+Read Chapter 11, *Traits and Generics*, continuing from page 266.
+
+
+## Next
+
+Take custom error type from *traits_and_generics/main.rs* and add to sample
+code from Chapter 7, *Error Handling*.

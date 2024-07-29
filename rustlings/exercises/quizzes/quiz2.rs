@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 // This is a quiz for the following sections:
 // - Strings
 // - Vecs
@@ -27,7 +30,18 @@ mod my_module {
     use super::Command;
 
     // TODO: Complete the function.
-    // pub fn transformer(input: ???) -> ??? { ??? }
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        let mut strings = Vec::<String>::new();
+        for (incoming, command) in input {
+            let string: String = match command {
+                Command::Append(count) => incoming + &("bar".repeat(count)),
+                Command::Trim => incoming.trim().to_string(),
+                Command::Uppercase => incoming.to_uppercase(),
+            };
+            strings.push(string);
+        }
+        strings
+    }
 }
 
 fn main() {
@@ -37,7 +51,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     // TODO: What do we need to import to have `transformer` in scope?
-    // use ???;
+    use super::my_module::transformer;
     use super::Command;
 
     #[test]

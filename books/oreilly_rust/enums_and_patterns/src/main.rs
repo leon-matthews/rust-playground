@@ -5,7 +5,9 @@
 
 fn main() {
     cstyle_enums();
-    patterns();
+    methods_on_patterns();
+    array_and_slice_patterns();
+    reference_patterns();
 }
 
 /**
@@ -142,7 +144,7 @@ fn rough_time_to_english(rt: RoughTime) -> String {
 }
 
 
-fn patterns() {
+fn methods_on_patterns() {
     let in_three_hours = RoughTime::InTheFuture(TimeUnit::Hours, 3);
     assert_eq!(rough_time_to_english(in_three_hours), "3 hours from now");
 
@@ -154,4 +156,54 @@ fn patterns() {
 
     let last_week = RoughTime::InThePast(TimeUnit::Weeks, 1);
     assert_eq!(rough_time_to_english(last_week), "1 week ago");
+}
+
+
+fn greet_people(names: &[&str]) {
+    match names {
+        [] => println!("Hello, nobody"),
+        [a] => println!("Hello, {}!", a),
+        [a, b] => println!("Hello, {} and {}!", a, b),
+        [a, .., b] => println!("Hello, everyone from {} to {}.", a, b),
+    }
+}
+
+
+fn array_and_slice_patterns() {
+    let names = ["Alyson", "Blake", "Leon", "Stella"];
+    greet_people(&names);
+}
+
+
+#[derive(Debug)]
+struct Account {
+    name: String,
+    language: String,
+}
+
+
+fn reference_patterns() {
+    let acc = Account{
+        name: String::from("Leon"),
+        language: String::from("English")
+    };
+
+    // Matching a noncopyable value moves the values out of the structure.
+    // error[E0382]: borrow of partially moved value: `acc`
+    /*
+    match acc {
+        Account { name, language } => {     // Move happens here.
+            println!("Hello {} in {}", name, language);
+            println!("{:?}", acc);
+        }
+    }
+    */
+
+    // Borrow values instead using the `ref` keyword, `ref mut` if needed.
+    match acc {
+        Account { ref name, ref language } => {
+            println!("Hello {} in {}", name, language);
+            println!("{:?}", &acc);
+        }
+    }
 }

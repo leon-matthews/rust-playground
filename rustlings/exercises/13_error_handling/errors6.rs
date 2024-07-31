@@ -3,6 +3,8 @@
 // content instead of printing it out or propagating it further. Here, we define
 // a custom error type to make it possible for callers to decide what to do next
 // when our function returns an error.
+#![allow(dead_code)]
+#![allow(unreachable_code)]
 
 use std::num::ParseIntError;
 
@@ -24,8 +26,10 @@ impl ParsePosNonzeroError {
         Self::Creation(err)
     }
 
-    // TODO: Add another error conversion function here.
-    // fn from_parseint(???) -> Self { ??? }
+    /// Error parsing integer
+    fn from_parseint(err: ParseIntError) -> Self {
+        Self::ParseInt(err)
+    }
 }
 
 #[derive(PartialEq, Debug)]
@@ -41,15 +45,34 @@ impl PositiveNonzeroInteger {
     }
 
     fn parse(s: &str) -> Result<Self, ParsePosNonzeroError> {
-        // TODO: change this to return an appropriate error instead of panicking
-        // when `parse()` returns an error.
-        let x: i64 = s.parse().unwrap();
-        Self::new(x).map_err(ParsePosNonzeroError::from_creation)
+        /*
+        Official solution
+        let x: i64 = s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
+        return Self::new(x).map_err(ParsePosNonzeroError::from_creation);
+        */
+
+
+        /*
+        My solution works, but is far more verbose. I need more practice!
+        */
+
+        // Parse number from string
+        // May fail with error: `ParsePosNonzeroError::ParseInt`
+        let parsed = match s.parse::<i64>() {
+            Ok(n) => n,
+            Err(e) => return Err(ParsePosNonzeroError::from_parseint(e)),
+        };
+
+        // Validate number
+        // May fail with error: `ParsePosNonzeroError::Creation`
+        match Self::new(parsed) {
+            Ok(result) => Ok(result),
+            Err(e) => Err(ParsePosNonzeroError::from_creation(e)),
+        }
     }
 }
 
 fn main() {
-    // You can optionally experiment here.
 }
 
 #[cfg(test)]

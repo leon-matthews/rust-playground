@@ -1,24 +1,33 @@
 #![allow(clippy::comparison_chain)]
 
+
 #[derive(PartialEq, Debug)]
 enum CreationError {
     Negative,
     Zero,
 }
 
+
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 
+
 impl PositiveNonzeroInteger {
     fn new(value: i64) -> Result<Self, CreationError> {
-        // TODO: This function shouldn't always return an `Ok`.
-        Ok(Self(value as u64))
+        if value > 0 {
+            Ok(Self(value as u64))
+        } else if value == 0 {
+            Err(CreationError::Zero)
+        } else {
+            Err(CreationError::Negative)
+        }
     }
 }
 
+
 fn main() {
-    // You can optionally experiment here.
 }
+
 
 #[cfg(test)]
 mod tests {

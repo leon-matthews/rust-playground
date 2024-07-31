@@ -11,4 +11,4 @@ Working on Chapter 9, *[Functions](https://doc.rust-lang.org/rust-by-example/fn.
 
 ## Next
 
-Work on Chapter 10, *[Modules](https://doc.rust-lang.org/rust-by-example/mod.html)*.
+Subsection on *closures*.

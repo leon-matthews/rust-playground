@@ -26,15 +26,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Release stdout lock
     }
     trait_objects();
-
-    // TODO: Custom traits
-    // Page 266 in Chapter 11
+    custom_traits();
 
     Ok(())
 }
-
-
-
 
 
 fn trait_objects() {
@@ -91,4 +86,58 @@ where T: Write {
     out.write(b"Hello 3\n").unwrap();
     out.flush().unwrap();
     Ok(())
+}
+
+
+struct Broom;
+struct Canvas;
+
+
+/// Anything in our game that is visible
+trait Visible {
+    fn draw(&self, canvas: &mut Canvas);
+
+    /// Default implementation
+    fn hit_test(&self, x: i32, y: i32) -> bool {
+        true
+    }
+}
+
+
+/// Implement `Visible` trait for Broom
+impl Visible for Broom {
+    fn draw(&self, canvas: &mut Canvas) {
+    }
+
+    fn hit_test(&self, x: i32, y: i32) -> bool {
+        false
+    }
+}
+
+
+/// Methods have to go into their own `impl` block
+impl Broom {
+    fn helper(&self) {
+
+    }
+}
+
+
+/// Implement traits on other peoples' types
+/// An extension trait.
+trait IsEmoji {
+    fn is_emoji(&self) -> bool;
+}
+
+impl IsEmoji for char {
+    fn is_emoji(&self) -> bool {
+        false
+    }
+}
+
+
+fn custom_traits() {
+    // We can add a method to a `char` type?!
+    let c = 'A';
+    assert!(!c.is_emoji());
 }

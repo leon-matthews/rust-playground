@@ -12,7 +12,7 @@
 
 ## Currently
 
-Read Chapter 11, *Traits and Generics*, continuing from page 266.
+Read Chapter 11, *Traits and Generics*, continuing from page 270.
 
 
 ## Next

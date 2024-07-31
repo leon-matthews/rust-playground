@@ -8,6 +8,14 @@
 [Interactive Version](https://doc.rust-lang.org/book/)
 
 
+## Currently
+
+Experiment with threading code examples for Chapter 16, *Fearless Concurrency*.
+
+Carry on with part 2, Message Passing:
+    https://doc.rust-lang.org/book/ch16-02-message-passing.html
+
+
 ## Next
 
 Continue reading the new Chapter 4, with quizes of course!

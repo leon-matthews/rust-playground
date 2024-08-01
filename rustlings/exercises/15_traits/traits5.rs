@@ -1,8 +1,12 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 trait SomeTrait {
     fn some_function(&self) -> bool {
         true
     }
 }
+
 
 trait OtherTrait {
     fn other_function(&self) -> bool {
@@ -10,22 +14,30 @@ trait OtherTrait {
     }
 }
 
+
 struct SomeStruct;
 impl SomeTrait for SomeStruct {}
 impl OtherTrait for SomeStruct {}
+
 
 struct OtherStruct;
 impl SomeTrait for OtherStruct {}
 impl OtherTrait for OtherStruct {}
 
+
 // TODO: Fix the compiler error by only changing the signature of this function.
-fn some_func(item: ???) -> bool {
+//~ fn some_func(item: impl SomeTrait + OtherTrait) -> bool
+//~ fn some_func<T: SomeTrait + OtherTrait>(item: T) -> bool
+fn some_func<T>(item: T) -> bool where T: SomeTrait + OtherTrait
+{
     item.some_function() && item.other_function()
 }
+
 
 fn main() {
     // You can optionally experiment here.
 }
+
 
 #[cfg(test)]
 mod tests {

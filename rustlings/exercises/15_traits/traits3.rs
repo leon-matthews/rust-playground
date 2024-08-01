@@ -1,27 +1,35 @@
 #![allow(dead_code)]
 
+
 trait Licensed {
     // TODO: Add a default implementation for `licensing_info` so that
     // implementors like the two structs below can share that default behavior
     // without repeating the function.
     // The default license information should be the string "Default license".
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String {
+        String::from("Default license")
+    }
 }
+
 
 struct SomeSoftware {
     version_number: i32,
 }
 
+
 struct OtherSoftware {
     version_number: String,
 }
 
+
 impl Licensed for SomeSoftware {} // Don't edit this line.
 impl Licensed for OtherSoftware {} // Don't edit this line.
+
 
 fn main() {
     // You can optionally experiment here.
 }
+
 
 #[cfg(test)]
 mod tests {

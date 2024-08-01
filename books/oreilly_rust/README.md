@@ -12,10 +12,9 @@
 
 ## Currently
 
-Read Chapter 11, *Traits and Generics*, continuing from page 270.
-
+Finish command-line tool from Chapter 2, regex-powered *quickreplace*,
+continuing from page 46.
 
 ## Next
 
-Take custom error type from *traits_and_generics/main.rs* and add to sample
-code from Chapter 7, *Error Handling*.
+Read Chapter 11, *Traits and Generics*, continuing from page 270.

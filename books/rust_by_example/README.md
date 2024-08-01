@@ -6,9 +6,10 @@
 
 ## Currently
 
-Working on Chapter 9, *[Functions](https://doc.rust-lang.org/rust-by-example/fn.html)*.
-
+Working on Chapter 9, *Functions*.
 
 ## Next
 
-Subsection on *closures*.
+Carry on with closure input parameters:
+
+https://doc.rust-lang.org/rust-by-example/fn/closures/input_parameters.html

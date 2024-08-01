@@ -5,10 +5,12 @@ use std::fmt;
 
 
 fn main() {
-    // Order of definition does not matter
-    //~ fizzbuzz_to(20);
-    //~ methods();
+    fizzbuzz_to(20);
+    methods();
     closures();
+    capturing_immutable();
+    capturing_mutable();
+    capturing_move();
 }
 
 
@@ -142,5 +144,110 @@ fn methods() {
 
 
 fn closures() {
-    todo!();
+    let outer_var = 42;
+
+    // Functions can't refer to variables in the enclosing environment
+    // error[E0434]: can't capture dynamic environment in a fn item
+    //~ fn add_one(i: i32) -> i32 {
+        //~ i + outer_var
+    //~ }
+
+    // Closures don't need type annotation
+    let annotated = |i: i32| -> i32 { i + outer_var };
+    let inferred  = |i| i + outer_var;
+
+    println!("`outer_var` plus three is {}", annotated(3));
+    println!("`outer_var` plus three is still {}", inferred(3));
+
+    // A closure taking no arguments which returns an `i32`.
+    // The return type is inferred.
+    let one = || 1;
+    println!("closure returning one: {}", one());
+}
+
+
+/**
+Closures can capture outside variables
+
+Either:
+    By reference: `&T`,
+    by mutable reference: `&mut T`, or
+    by value `T`.
+*/
+fn capturing_immutable() {
+    let colour = String::from("green");
+
+    // Print macro only need immutable reference, so that's what it gets!
+    let print = || println!("Variable `colour` is {:?}", colour);
+
+    // Call closure using the borrow
+    print();
+
+    // Closure only holds an immutable reference, so we can reborrow
+    let _reborrow = &colour;
+    print();
+
+    // Move works, only after last use of closure
+    let _colour_moved = colour;
+    // error[E0505]: cannot move out of `colour` because it is borrowed
+    //~ print();
+}
+
+
+/**
+A closure to increment our `count` could take either `&mut count` or `count`
+but `&mut count` is less restrictive so it takes that.
+*/
+fn capturing_mutable() {
+    let mut count = 0;
+
+    // A `mut` is required on `inc` because a `&mut` is stored inside. Thus,
+    // calling the closure mutates `count` which requires a `mut`.
+    let mut inc = || {
+        count += 1;
+        println!("Variable `count` is {}", count);
+    };
+
+    inc();
+    inc();
+
+    // We can borrow once we've finished using the closure.
+    let _reborrow = &count;
+    let _reborrow = &mut count;
+    //~ inc();
+}
+
+
+fn capturing_move() {
+    // A non-copy type.
+    let movable = Box::new(3);
+
+    // `mem::drop` requires `T` so this must take by value - and it does.
+    let consume = || {
+        println!("`movable`: {:?}", movable);
+        drop(movable);
+    };
+
+    // Can only be called once
+    consume();
+
+    // error[E0382]: use of moved value: `consume`
+    //~ consume();
+
+
+    // Move can be forced using `move`
+    let haystack = vec![2, 3, 5, 7];
+    let is_prime = move |needle| haystack.contains(needle);
+
+    // Note that vec::contains() requires &T, and rust infered that to be the
+    // type of the closure's argument.
+    println!("One is prime: {}", is_prime(&1));
+
+    // Can can call the closure multiple times
+    println!("Seven is prime: {}", is_prime(&7));
+    println!("Eleven is prime: {}", is_prime(&11));
+
+    // We didn't *need* to move haystack. Removing `move` will allow this line.
+    // error[E0382]: borrow of moved value: `haystack`
+    //~ println!("There are {} primes in existence", haystack.len());
 }

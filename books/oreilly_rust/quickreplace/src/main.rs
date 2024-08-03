@@ -5,13 +5,13 @@
 use std::env;
 use std::fs;
 
+use regex::Regex;
 use text_colorizer::*;
 
 
 fn main() {
     // Parse arguments
     let args = parse_args();
-    dbg!(&args);
 
     // Read input
     let data = match fs::read_to_string(&args.filename) {
@@ -23,18 +23,29 @@ fn main() {
         }
     };
 
-    // Write output
-    match fs::write(&args.output, &data) {
-        Ok(_) => {},
+    // Search-and-replace
+    let replaced = match replace(&args.target, &args.replacement, &data) {
+        Ok(v) => v,
         Err(e) => {
             eprintln!("{} failed to write to file '{}': {:?}",
                 "Error:".red().bold(), args.filename, e);
             std::process::exit(3);
         }
+    };
+
+    // Write output
+    match fs::write(&args.output, &replaced) {
+        Ok(_) => {},
+        Err(e) => {
+            eprintln!("{} failed to write to file '{}': {:?}",
+                "Error:".red().bold(), args.filename, e);
+            std::process::exit(4);
+        }
     }
 }
 
 
+/// Configuration captured from command-line arguments
 #[derive(Debug)]
 struct Arguments {
     target: String,
@@ -64,8 +75,16 @@ fn parse_args() -> Arguments {
 }
 
 
+/// Print usage out to stderr
 fn print_usage() {
     eprintln!("{} - change occurences of one string into another",
         "quickreplace".green());
     eprintln!("Usage: quickreplace <target> <replacement> <INPUT> <OUTPUT>");
+}
+
+
+/// Run search and replace using `target` regex
+fn replace(target: &str, replacement: &str, text: &str) -> Result<String, regex::Error> {
+    let regex = Regex::new(target)?;
+    Ok(regex.replace_all(text, replacement).to_string())
 }

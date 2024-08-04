@@ -10,14 +10,14 @@
 
 ## Currently
 
-Experiment with threading code examples for Chapter 16, *Fearless Concurrency*.
+Continue reading the new Chapter 4, with quizes of course!
 
-Carry on with part 2, Message Passing:
-    https://doc.rust-lang.org/book/ch16-02-message-passing.html
+https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html
 
 
 ## Next
 
-Continue reading the new Chapter 4, with quizes of course!
+Experiment with threading code examples for Chapter 16, *Fearless Concurrency*.
 
-https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html
+Carry on with part 2, Message Passing:
+    https://doc.rust-lang.org/book/ch16-02-message-passing.html

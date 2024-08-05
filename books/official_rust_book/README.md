@@ -12,7 +12,7 @@
 
 Continue reading the new Chapter 4, with quizes of course!
 
-https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html
+https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html
 
 
 ## Next

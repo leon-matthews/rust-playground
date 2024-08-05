@@ -1,12 +1,18 @@
+#![allow(unused_variables)]
 
-/// A strings capacity grows like a vector's when increased in size.
+/// Experiments with lifetimes and ownership
 fn main() {
-    let mut name = String::from("Leon");
-    dbg!(name.len(), name.capacity());
+    let v = vec![];//String::from("Hello"), String::from("world")];
+    let default = String::from("Africa");
+    let first = first_or(&v, &default);
+    println!("{:?}", first);
+}
 
-    name += " Matthews";
-    dbg!(name.len(), name.capacity());
 
-    name.push_str("!");
-    dbg!(name.len(), name.capacity());
+fn first_or<'a>(strings: &'a Vec<String>, default: &'a String) -> &'a String {
+    if strings.len() > 0 {
+        &strings[0]
+    } else {
+        default
+    }
 }

@@ -1,24 +1,30 @@
+
 #[derive(Debug, PartialEq, Eq)]
 enum DivisionError {
     // Example: 42 / 0
     DivideByZero,
+
     // Only case for `i64`: `i64::MIN / -1` because the result is `i64::MAX + 1`
     IntegerOverflow,
+
     // Example: 5 / 2 = 2.5
     NotDivisible,
 }
 
+
 // TODO: Calculate `a` divided by `b` if `a` is evenly divisible by `b`.
 // Otherwise, return a suitable error.
 fn divide(a: i64, b: i64) -> Result<i64, DivisionError> {
-    todo!();
+    Ok(a)
 }
+
 
 // TODO: Add the correct return type and complete the function body.
 // Desired output: `Ok([1, 11, 1426, 3])`
-fn result_with_list() {
+fn result_with_list() -> Result<Vec<i64>, DivisionError> {
     let numbers = [27, 297, 38502, 81];
     let division_results = numbers.into_iter().map(|n| divide(n, 27));
+    Ok(division_results)
 }
 
 // TODO: Add the correct return type and complete the function body.

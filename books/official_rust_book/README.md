@@ -17,7 +17,4 @@ https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html
 
 ## Next
 
-Experiment with threading code examples for Chapter 16, *Fearless Concurrency*.
-
-Carry on with part 2, Message Passing:
-    https://doc.rust-lang.org/book/ch16-02-message-passing.html
+Read *Iterators* section from Chapter 13, then attempt rustlings again.

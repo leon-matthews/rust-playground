@@ -12,4 +12,9 @@
 
 ## Currently
 
+Carry on implementing examples from Chapter 15, *Iterators*, from page 354.
+
+
+## Next
+
 Read Chapter 11, *Traits and Generics*, continuing from page 270.

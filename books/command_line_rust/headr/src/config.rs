@@ -30,16 +30,16 @@ impl Config {
         // Bytes
         args.push(
             Arg::new("bytes").short('c').long("bytes")
-            .value_parser(clap::value_parser!(usize))
             .help("Print the first NUM bytes of each file")
+            .value_parser(clap::value_parser!(usize))
         );
 
         // Lines
         args.push(
             Arg::new("lines").short('n').long("lines")
-            .value_parser(clap::value_parser!(usize))
             .default_value("10")
             .help("Print the first NUM lines of each file")
+            .value_parser(clap::value_parser!(usize))
         );
 
         // Files
@@ -128,11 +128,11 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_all() {
-        let args = vec!["name", "-c", "321", "-n", "123", "a.txt", "b.txt"];
+    fn test_parse_files() {
+        let args = vec!["name", "a.txt", "b.txt"];
         let config = Config::from_args(args.iter());
-        assert_eq!(config.lines, 123);
-        assert_eq!(config.bytes, Some(321));
+        assert_eq!(config.lines, 10);
+        assert_eq!(config.bytes, None);
         assert_eq!(config.files.len(), 2);
         assert_eq!(
             config.files,

@@ -9,8 +9,8 @@ use clap::{Arg, ArgAction, command};
 #[derive(Debug)]
 pub struct Config {
     pub files: Vec<PathBuf>,
-    pub lines: usize,                   // Number of lines to print
-    pub bytes: Option<usize>,           // Number of bytes to print
+    pub lines: u64,                   // Number of lines to print
+    pub bytes: Option<u64>,           // Number of bytes to print
 }
 
 
@@ -30,8 +30,9 @@ impl Config {
         // Bytes
         args.push(
             Arg::new("bytes").short('c').long("bytes")
+            .conflicts_with("lines")
             .help("Print the first NUM bytes of each file")
-            .value_parser(clap::value_parser!(usize))
+            .value_parser(clap::value_parser!(u64).range(1..))
         );
 
         // Lines
@@ -39,7 +40,7 @@ impl Config {
             Arg::new("lines").short('n').long("lines")
             .default_value("10")
             .help("Print the first NUM lines of each file")
-            .value_parser(clap::value_parser!(usize))
+            .value_parser(clap::value_parser!(u64).range(1..))
         );
 
         // Files
@@ -118,14 +119,7 @@ mod tests {
         assert_eq!(config.bytes, Some(321));
     }
 
-    #[test]
-    fn test_parse_lines_and_bytes() {
-        let args = vec!["name", "-c", "321", "-n", "123"];
-        let config = Config::from_args(args.iter());
-        assert_eq!(config.files.len(), 0);
-        assert_eq!(config.lines, 123);
-        assert_eq!(config.bytes, Some(321));
-    }
+    // NB. Have to test lines/bytes conflict in integration tests
 
     #[test]
     fn test_parse_files() {

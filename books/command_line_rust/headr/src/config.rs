@@ -46,6 +46,7 @@ impl Config {
         // Files
         args.push(
             Arg::new("files").action(ArgAction::Append)
+            .default_value("-")
             .value_parser(clap::value_parser!(PathBuf))
         );
 
@@ -96,7 +97,7 @@ mod tests {
     #[test]
     fn test_parse_defaults() {
         let config = Config::from_args(empty::<OsString>());
-        assert_eq!(config.files.len(), 0);
+        assert_eq!(config.files, [PathBuf::from("-")]);
         assert_eq!(config.lines, 10);
         assert_eq!(config.bytes, None);
     }
@@ -105,7 +106,7 @@ mod tests {
     fn test_parse_lines() {
         let args = vec!["name", "-n", "123"];
         let config = Config::from_args(args.iter());
-        assert_eq!(config.files.len(), 0);
+        assert_eq!(config.files.len(), 1);
         assert_eq!(config.lines, 123);
         assert_eq!(config.bytes, None);
     }
@@ -114,7 +115,7 @@ mod tests {
     fn test_parse_bytes() {
         let args = vec!["name", "-c", "321"];
         let config = Config::from_args(args.iter());
-        assert_eq!(config.files.len(), 0);
+        assert_eq!(config.files.len(), 1);
         assert_eq!(config.lines, 10);
         assert_eq!(config.bytes, Some(321));
     }

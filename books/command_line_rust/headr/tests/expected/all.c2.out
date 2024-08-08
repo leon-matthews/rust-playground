@@ -1,10 +1,10 @@
-==> ./tests/inputs/empty.txt <==
+==> ./inputs/empty.txt <==
 
-==> ./tests/inputs/one.txt <==
+==> ./inputs/one.txt <==
 Ö
-==> ./tests/inputs/two.txt <==
+==> ./inputs/two.txt <==
 Tw
-==> ./tests/inputs/three.txt <==
+==> ./inputs/three.txt <==
 Th
-==> ./tests/inputs/twelve.txt <==
+==> ./inputs/twelve.txt <==
 on

@@ -1,9 +1,14 @@
 #![allow(dead_code)]
 
+use std::collections::{BTreeMap, HashMap};
+use std::iter::{from_fn, repeat, successors};
+use std::str::FromStr;
+
+
 /**
 Iterator workflow:
 
-1. Create iterator, eg. `from_fn`, `successors`
+1. Create iterator, eg. `from_fn`, `repeat`, `successors`
 2. Adapt iterater, eg. `filter`, 'take'
 3. Consume iterator, eg. `count`, `product`, `sum`
 */
@@ -13,6 +18,11 @@ fn main() {
     iter_vs_into_iter();
     from_fn_example();
     successors_example();
+    map_and_filter();
+    filter_map_adapter();
+    flat_map_adapter();
+    flatten_adapter();
+    zip_example();
 }
 
 
@@ -132,9 +142,6 @@ fn iter_vs_into_iter() {
 Given a function that returns `Option<t>`, `std::iter::from_fn` returns an
 iterator than simply calls the function to produce its items.
 */
-
-use std::iter::from_fn;
-
 fn from_fn_example() {
     // Plain function
     fn answer() -> Option<i32> { Some(42) }
@@ -158,10 +165,97 @@ fn from_fn_example() {
 }
 
 
-use std::iter::successors;
-
+/// Iterator source where next item is computed based on the preceding one.
 fn successors_example() {
     let powers_of_two = successors(Some(2_u16), |n| n.checked_mul(2))
         .collect::<Vec<_>>();
     println!("{:?}", powers_of_two);
+}
+
+
+/// Iterator adapters produce another iterator from an existing one
+/// `map` applies closure to each item
+/// `filter` skips items when its closure returns false
+fn map_and_filter() {
+    let text = "  ponies \n giraffes\niguanas  \nsquid".to_string();
+    let v: Vec<&str> = text.lines()
+        .map(str::trim)
+        .filter(|s| *s != "iguanas")
+        .collect();
+    println!("{:?}", v);
+}
+
+
+/**
+`filter_map` is like `map`, but allows us to either transform or drop.
+Specifically, it yields only the values for which the supplied closure
+returns `Some(value)`.
+*/
+fn filter_map_adapter() {
+
+    let text = "1\nfrond .25  289\n3.14415 estuary\n";
+    for number in text
+        // Break into 'tokens'
+        .split_whitespace()
+        // Convert to f64, return result, convert to option,
+        // then only pass on values that are wrapped in `Some`
+        .filter_map(|w| f64::from_str(w).ok())
+    {
+        println!("{number}");
+    }
+}
+
+
+/**
+Creates an iterator that works like map, but flattens nested structure.
+*/
+fn flat_map_adapter() {
+    let mut cities = HashMap::new();
+    cities.insert("Japan", vec!["Tokyo", "Kyoto"]);
+    cities.insert("USA", vec!["Portland", "Nashville", "New York"]);
+    cities.insert("Brazil", vec!["Brasilia", "Sao Paulo"]);
+    cities.insert("Kenya", vec!["Nairobi", "Mombasa"]);
+    cities.insert("Netherlands", vec!["Amsterdam", "Utrecht"]);
+
+    let countries = ["Japan", "Brazil", "Kenya", "USA"];
+
+    // If closure produces iterator, consume that too
+    for city in countries.iter().flat_map(|country| &cities[country]) {
+        print!("{city} ");
+    }
+    println!();
+}
+
+
+/**
+Concatinates iterators items, assumingc each item is itself an iterable.
+*/
+fn flatten_adapter() {
+    // Map cities to their parks
+    let mut parks = BTreeMap::new();
+    parks.insert("Portland", vec!["Mt. Tabor Park", "Forest Park"]);
+    parks.insert("Kyoto", vec!["Tadasu-no-Mori Forest", "Maruyama Koen"]);
+    parks.insert("Nashville", vec!["Percy Warner Park", "Dragon Park"]);
+
+    // Build vector of all parks
+    let all_parks: Vec<_> = parks.values().flatten().cloned().collect();
+    println!("{:?}", all_parks);
+
+    // Flatten can take a vector of options and keep only the values in `Some`
+    // `Option` implements `IntoIterator` where it is represented as a
+    // sequence of zero or one value. The same trick works with `Result`, where
+    // errors are then discarded.
+    let options = vec![None, Some("Day"), None, Some("One")];
+    let values: Vec<_> = options.into_iter().flatten().collect();
+    assert_eq!(values, ["Day", "One"]);
+}
+
+
+/// Produce tuples until one iterator runs out
+fn zip_example() {
+    let going = repeat("going");
+    let endings = ["once", "twice", "chicken soup with rice"];
+    for (first, second) in going.zip(endings) {
+        println!("{} {}", first, second);
+    }
 }

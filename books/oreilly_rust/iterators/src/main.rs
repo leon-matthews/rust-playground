@@ -24,6 +24,7 @@ fn main() {
     flatten_adapter();
     zip_example();
     by_ref_example();
+    fold_example();
 }
 
 
@@ -263,7 +264,8 @@ fn zip_example() {
 
 
 /**
-Use iterator twice by temporarily taking control of it by reference.
+Allow iterator to be detached from adapter, by temporarily taking control of
+it by reference.
 */
 fn by_ref_example() {
     let email =
@@ -271,7 +273,7 @@ fn by_ref_example() {
         From: id\n\
         \n
         Donuts in break room!\n";
-    let mut lines = email.lines();
+    let mut lines = email.lines().map(|line| line.trim());
 
     // Take temporary control of `lines` iterator using `by_ref()`
     println!("Headers:");
@@ -281,10 +283,39 @@ fn by_ref_example() {
 
     // Half-used `lines` still has some content left
     println!("Body:");
-    for body in lines.map(|line| line.trim() ) {
+    for body in lines {
         if body.is_empty() {
             continue;
         }
         println!("  {body}");
     }
+}
+
+/**
+Folds every element into an accumulator by applying an operation, returning
+the final result.
+
+The iterator consumer's first argument is the initial value of the
+accumulator, the second is a closure. The closure takes two arguments: the
+accumulator's current value then the current item.
+
+The returned result is the final value of the accumulator.
+*/
+fn fold_example() {
+    let a = [5, 6, 7, 8, 9, 10];
+
+    // Count implemented by just adding one to accumulator
+    assert_eq!(a.iter().fold(0, |accumulator, _| accumulator + 1), 6);
+
+    // Sum by adding value to accumulator
+    assert_eq!(a.iter().fold(0, |accumulator, n| accumulator + n), 45);
+
+    // Product by multiplying, starting with one
+    assert_eq!(a.iter().fold(1, |accumulator, n| accumulator * n), 151_200);
+
+    // Max manually
+    assert_eq!(a.iter().fold(i32::MIN, |acc, n| if *n > acc { *n } else { acc } ), 10);
+
+    // Max using stdlib `max()` works, but function needs clones, not references
+    assert_eq!(a.iter().cloned().fold(i32::MIN, std::cmp::max ), 10);
 }

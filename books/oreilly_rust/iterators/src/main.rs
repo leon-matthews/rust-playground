@@ -364,5 +364,8 @@ fn extend_iterator() {
 Create two collections from a single iterator.
 */
 fn partiton_example() {
-
+    let numbers = 1..50;
+    let (even, odd): (Vec<_>, Vec<_>) = numbers.partition(|n| n % 2 == 0);
+    println!("{even:?}");
+    println!("{odd:?}");
 }

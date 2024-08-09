@@ -23,6 +23,7 @@ fn main() {
     flat_map_adapter();
     flatten_adapter();
     zip_example();
+    by_ref_example();
 }
 
 
@@ -257,5 +258,33 @@ fn zip_example() {
     let endings = ["once", "twice", "chicken soup with rice"];
     for (first, second) in going.zip(endings) {
         println!("{} {}", first, second);
+    }
+}
+
+
+/**
+Use iterator twice by temporarily taking control of it by reference.
+*/
+fn by_ref_example() {
+    let email =
+        "To: jimb\n\
+        From: id\n\
+        \n
+        Donuts in break room!\n";
+    let mut lines = email.lines();
+
+    // Take temporary control of `lines` iterator using `by_ref()`
+    println!("Headers:");
+    for header in lines.by_ref().take_while(|line| !line.is_empty() ) {
+        println!("  {header}");
+    }
+
+    // Half-used `lines` still has some content left
+    println!("Body:");
+    for body in lines.map(|line| line.trim() ) {
+        if body.is_empty() {
+            continue;
+        }
+        println!("  {body}");
     }
 }

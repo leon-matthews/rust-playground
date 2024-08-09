@@ -4,6 +4,21 @@
 use rand::prelude::*;
 
 
+mod snakes_and_ladders {
+    /// What a player rolled, and where they ended up
+    struct Turn {
+        roll: u8,
+        result: u8,
+    }
+
+    /// Entire game history.
+    /// Last turn must be an exact roll to land on 100.
+    struct Game {
+        turns: Vec<Turn>,
+    }
+}
+
+
 #[derive(Debug)]
 struct DiceRoller {
     rng: SmallRng,

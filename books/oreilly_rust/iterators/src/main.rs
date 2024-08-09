@@ -25,6 +25,9 @@ fn main() {
     zip_example();
     by_ref_example();
     fold_example();
+    from_iterator();
+    extend_iterator();
+    partiton_example();
 }
 
 
@@ -318,4 +321,48 @@ fn fold_example() {
 
     // Max using stdlib `max()` works, but function needs clones, not references
     assert_eq!(a.iter().cloned().fold(i32::MIN, std::cmp::max ), 10);
+}
+
+
+/**
+The `FromIterator` trait allows collections to build themselves from an iterator.
+
+It provides the `from_iter()` method, but you should usually use the `Iterator`
+trait method `collect()` instead. It's a convenience function which requires
+that the destination container implements `FromIterator`.
+*/
+fn from_iterator() {
+    // Using collect is easy, but we do have to specify that we want
+    // a vector, although we can let Rust determine its type for us.
+    let v: Vec<_> = (1..10).collect();
+    println!("{v:?}");
+
+    // Rather than add the type to 'v', we can use turbofish on the method
+    let v2 = (1..10).filter(|n| n % 2 == 0).collect::<Vec<_>>();
+    println!("{v2:?}");
+
+    // We can use `from_iter` directly too, on the type
+    // It's less common because it goes at the start, rather than the
+    // end of a iterator chain
+    let v3 = Vec::from_iter((1..10).rev());
+    println!("{v3:?}");
+}
+
+
+/**
+If the collection implements the `Extend` trait, then `extend()` adds an
+interator's items to the collection.
+*/
+fn extend_iterator() {
+    let mut v = Vec::from_iter(1..11);
+    v.extend((1..10).rev());
+    println!("{v:?}");
+}
+
+
+/**
+Create two collections from a single iterator.
+*/
+fn partiton_example() {
+
 }

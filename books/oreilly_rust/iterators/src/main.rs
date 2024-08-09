@@ -1,20 +1,18 @@
 #![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-
 
 /**
 Iterator workflow:
 
-1. Create iterator, eg. `from_fn()`
-2. Adapt iterater, eg. `filter()`
-3. Consume iterator, eg. `count()`, `sum()`
+1. Create iterator, eg. `from_fn`, `successors`
+2. Adapt iterater, eg. `filter`, 'take'
+3. Consume iterator, eg. `count`, `product`, `sum`
 */
 fn main() {
     triangle_example();
     desugar_for_loops();
     iter_vs_into_iter();
     from_fn_example();
+    successors_example();
 }
 
 
@@ -109,8 +107,8 @@ fn iter_vs_into_iter() {
     let mut v = vec![String::from("Leon"), String::from("Matthews")];
 
     // Use `into_iter()`, careful about precedence
-    let it = (&mut v).into_iter();      // std::slice::IterMut<'_, String>
-    let it = (&v).into_iter();          // std::slice::Iter<'_, String>
+    let _it = (&mut v).into_iter();     // std::slice::IterMut<'_, String>
+    let _it = (&v).into_iter();         // std::slice::Iter<'_, String>
     let mut it = v.into_iter();         // std::vec::IntoIter<String>
 
     assert_eq!(it.next(), Some("Leon".to_string()));
@@ -122,11 +120,11 @@ fn iter_vs_into_iter() {
 
     // `iter()`
     // Same as: `(&v).into_iter()`
-    let it2 = v2.iter();                // std::slice::Iter<'_, String>
+    let _it2 = v2.iter();               // std::slice::Iter<'_, String>
 
     // `iter_mut()`
     // Same as: `(&mut v).into_iter()`
-    let it3 = v2.iter_mut();            // std::slice::IterMut<'_, String>
+    let _it3 = v2.iter_mut();           // std::slice::IterMut<'_, String>
 }
 
 
@@ -157,4 +155,13 @@ fn from_fn_example() {
     let answers = from_fn(|| Some(42));
     let collected: Vec<u8> = answers.take(10).collect();
     println!("Answers: {:?}", collected);
+}
+
+
+use std::iter::successors;
+
+fn successors_example() {
+    let powers_of_two = successors(Some(2_u16), |n| n.checked_mul(2))
+        .collect::<Vec<_>>();
+    println!("{:?}", powers_of_two);
 }

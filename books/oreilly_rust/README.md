@@ -12,7 +12,7 @@
 
 ## Currently
 
-Carry on implementing examples from Chapter 15, *Iterators*, from page 372.
+Implementing examples from Chapter 16, *Collections*.
 
 
 ## Next

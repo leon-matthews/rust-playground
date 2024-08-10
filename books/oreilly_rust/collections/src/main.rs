@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 
 /**
 There are eight standard collections, all generic types:
@@ -14,5 +15,86 @@ There are eight standard collections, all generic types:
 The most-used are Vec<T>, HashMap<K, V>, and HashSet<T>.
 */
 fn main() {
-    println!("Hello, world!");
+    vec_macro();
+    vec_access();
+    vec_grow_and_shrink();
+}
+
+
+/// Create vectors using `vec!` macro.
+fn vec_macro() {
+    // Empty vector
+    let v: Vec<i32> = vec![];
+
+    // Again, but type inferred by later operations
+    let mut v = vec![];
+    v.push(42);                                     // Vec<i32>
+
+    // Create from contents
+    let v = vec!["The", "quick", "brown", "fox"];   // Vec<&str>
+
+    // Repeat first element, note semi-colon
+    let buffer = vec![0_u8; 1024];                  // 1KiB of zeros
+    println!("Buffer is {} bytes long", buffer.len());
+}
+
+
+/// Access values inside vector
+fn vec_access() {
+    // Index operators can get elements or slices, and references to same.
+    // Requires `usize` arguments, and will panic if index out of bounds.
+    let words = vec!["The", "quick", "brown", "fox"];
+    assert_eq!(words[0], "The");
+    assert_eq!(words[1..3], ["quick", "brown"]);
+
+    // Access methods are safer...
+
+    // first() returns reference to first element, Option<&T>
+    let maybe_first = words.first();
+    if let Some(first) = maybe_first {
+        print!("{first} ");
+    }
+
+    // last(), is *almost* the same as first()
+    let maybe_last = words.last();
+    println!("{maybe_last:?}");
+
+    // get(usize), returns Option<&T> to element, if any.
+    assert_eq!(words.get(3), Some("fox").as_ref());
+    assert_eq!(words.get(123), None);
+}
+
+
+fn vec_grow_and_shrink() {
+    fn info<T>(v: &Vec<T>) -> String {
+        format!("(length: {}, capacity: {})", v.len(), v.capacity())
+    }
+
+    // Vectors usually have plenty of spare space
+    let mut v = vec![];
+    assert!(v.is_empty());
+    println!("New vector {}", info(&v));
+
+    v.push(42);
+    println!("Push integer {}", info(&v));
+
+    // We can reserve space for new vector
+    let v: Vec<u8> = Vec::with_capacity(1024);
+    println!("Vec::with_capacity(1024) {}", info(&v));
+
+    // We can reserve space for an existing vector too
+    let mut v: Vec<_> = (1..100).collect();
+    println!("(1..100).collect() {}", info(&v));
+
+    // Grow, leaving no extra space
+    v.reserve_exact(200);
+    println!("v.reserve_exact(200) {}", info(&v));
+
+    // Grow, maybe leaving extra capacity
+    v.reserve(300);
+    println!("v.reserve(300) {}", info(&v));
+
+    // Shrink down to fit contents
+    v.shrink_to_fit();
+    println!("v.shrink_to_fit() {}", info(&v));
 }

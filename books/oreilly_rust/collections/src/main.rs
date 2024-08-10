@@ -25,6 +25,7 @@ fn main() {
     vecdeque_example();
     priority_queue();
     hashmap_and_btreemap();
+    hashset_and_btreeset();
 }
 
 
@@ -178,7 +179,8 @@ fn hashmap_and_btreemap() {
         ("is", 9_545),
     ];
 
-    // HashMap<K, V> from vector of tuples
+    // HashMap<K, V> from vector of tuples.
+    // Note use of entry API that effectively borrows `mut ref` to value.
     let mut hash_map: HashMap<_, _> = word_counts.clone().into_iter().collect();
     hash_map.insert("is", 9_545);
     hash_map.entry("not").or_insert(8_855);
@@ -191,7 +193,7 @@ fn hashmap_and_btreemap() {
     }
     println!();
 
-    // BTreeMap<K, V> from same vector
+    // BTreeMap<K, V> from same vector.
     let mut btree_map: BTreeMap<_, _> = word_counts.into_iter().collect();
     btree_map.insert("is", 9_545);
     btree_map.entry("not").or_insert(8_855);
@@ -202,4 +204,31 @@ fn hashmap_and_btreemap() {
     for (k, v) in &btree_map {
         println!("{k:<4} -> {v:>5}");
     }
+}
+
+
+/**
+Sets are collections of values arranged for fast membership testing.
+
+A `BTreeSet<T>` keeps value in lexiographic order.
+*/
+fn hashset_and_btreeset() {
+    let mut set = HashSet::<String>::new();
+    set.insert(String::from("carrot"));
+    set.insert(String::from("banana"));
+    set.insert(String::from("apple"));
+    for entry in &set {
+        print!("{entry} ");
+    }
+    println!();
+
+    let mut bset = BTreeSet::<String>::new();
+    bset.insert(String::from("carrot"));
+    bset.insert(String::from("banana"));
+    bset.insert(String::from("apple"));
+    bset.insert(String::from("durian"));
+    for entry in &bset {
+        print!("{entry} ");
+    }
+    println!();
 }

@@ -24,6 +24,7 @@ fn main() {
     slice_sort_search();
     vecdeque_example();
     priority_queue();
+    hashmap_and_btreemap();
 }
 
 
@@ -131,7 +132,7 @@ fn slice_sort_search() {
 
 
 /**
-VecDeque<T> implements circular buffer to efficiently push elements to
+`VecDeque<T>` implements circular buffer to efficiently push elements to
 either end.
 */
 fn vecdeque_example() {
@@ -144,7 +145,7 @@ fn vecdeque_example() {
 
 
 /**
-BinaryHeap<T> collection where elements are kept loosly organised so that the
+`BinaryHeap<T>` collection where elements are kept loosly organised so that the
 greatest value always bubbles to the front of the queue.
 */
 fn priority_queue() {
@@ -153,4 +154,52 @@ fn priority_queue() {
     assert_eq!(heap.pop(), Some(9));
     assert_eq!(heap.pop(), Some(8));
     assert_eq!(heap.pop(), Some(7));
+}
+
+
+/**
+`HashMap<K, V>` and `BTreeMap<K, V>` are similar with different representations.
+
+The former is a little faster, the latter keeps its elements in (sorted, not
+insertion) order.
+*/
+fn hashmap_and_btreemap() {
+    // Top 10 words in Shakespeare's complete works
+    let word_counts = vec![
+        ("the", 28_944),
+        ("and", 27_120),
+        ("i", 21_120),
+        ("to", 20_136),
+        ("a", 14_945),
+        ("you", 13_989),
+        ("my", 12_949),
+        ("in", 11_513),
+        ("that", 11_488),
+        ("is", 9_545),
+    ];
+
+    // HashMap<K, V> from vector of tuples
+    let mut hash_map: HashMap<_, _> = word_counts.clone().into_iter().collect();
+    hash_map.insert("is", 9_545);
+    hash_map.entry("not").or_insert(8_855);
+    hash_map.entry("with").or_insert(8_293);
+    hash_map.entry("me").or_insert(8_043);
+    hash_map.entry("it").or_insert(8_003);
+    println!("HashMap =====");
+    for (k, v) in &hash_map {
+        println!("{k:<4} -> {v:>5}");
+    }
+    println!();
+
+    // BTreeMap<K, V> from same vector
+    let mut btree_map: BTreeMap<_, _> = word_counts.into_iter().collect();
+    btree_map.insert("is", 9_545);
+    btree_map.entry("not").or_insert(8_855);
+    btree_map.entry("with").or_insert(8_293);
+    btree_map.entry("me").or_insert(8_043);
+    btree_map.entry("it").or_insert(8_003);
+    println!("BTreeMap ====");
+    for (k, v) in &btree_map {
+        println!("{k:<4} -> {v:>5}");
+    }
 }

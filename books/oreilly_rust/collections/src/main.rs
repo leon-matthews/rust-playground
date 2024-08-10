@@ -1,5 +1,8 @@
 #![allow(unused_variables)]
 
+use std::collections::*;
+
+
 /**
 There are eight standard collections, all generic types:
 
@@ -16,8 +19,11 @@ The most-used are Vec<T>, HashMap<K, V>, and HashSet<T>.
 */
 fn main() {
     vec_macro();
-    vec_access();
+    vec_slice_access();
     vec_grow_and_shrink();
+    slice_sort_search();
+    vecdeque_example();
+    priority_queue();
 }
 
 
@@ -39,15 +45,16 @@ fn vec_macro() {
 }
 
 
-/// Access values inside vector
-fn vec_access() {
+/// Access values inside vertors and slices
+fn vec_slice_access() {
     // Index operators can get elements or slices, and references to same.
     // Requires `usize` arguments, and will panic if index out of bounds.
     let words = vec!["The", "quick", "brown", "fox"];
     assert_eq!(words[0], "The");
     assert_eq!(words[1..3], ["quick", "brown"]);
 
-    // Access methods are safer...
+    // Using slice access methods are safer - they also work
+    // on arrays and vectors too.
 
     // first() returns reference to first element, Option<&T>
     let maybe_first = words.first();
@@ -62,6 +69,8 @@ fn vec_access() {
     // get(usize), returns Option<&T> to element, if any.
     assert_eq!(words.get(3), Some("fox").as_ref());
     assert_eq!(words.get(123), None);
+
+    // Also `slice.len()` & `slice.is_empty()`
 }
 
 
@@ -97,4 +106,51 @@ fn vec_grow_and_shrink() {
     // Shrink down to fit contents
     v.shrink_to_fit();
     println!("v.shrink_to_fit() {}", info(&v));
+}
+
+
+fn slice_sort_search() {
+    // slice.sort(), present only when element type implements `Ord`
+    let mut v = vec![2, 5, 1, 9, 4, 7, 6, 10, 3, 8];
+    v.sort();
+    assert_eq!(v, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    // slice.binary_search(), only works on sorted slice
+    // Returns Ok(index) of existing element, or Err(index) where value
+    // should be inserted to preserve order.
+    let maybe_index = v.binary_search(&5);
+    println!("5 found at index {}", maybe_index.unwrap());
+
+    // slice.reverse(), reverses in place
+    v.reverse();
+    assert_eq!(v, [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+
+    // slice.contains(), short-circuit linear search, no sort needed.
+    assert_eq!(v.contains(&5), true);
+}
+
+
+/**
+VecDeque<T> implements circular buffer to efficiently push elements to
+either end.
+*/
+fn vecdeque_example() {
+    let mut d = VecDeque::from(vec!['B', 'C', 'D']);
+    d.push_front('A');
+    d.push_back('E');
+    println!("{:?}, length {}, capacity {}", d, d.len(), d.capacity());
+    assert_eq!(d, ['A', 'B', 'C', 'D', 'E']);
+}
+
+
+/**
+BinaryHeap<T> collection where elements are kept loosly organised so that the
+greatest value always bubbles to the front of the queue.
+*/
+fn priority_queue() {
+    let mut heap = BinaryHeap::from(vec![2, 3, 8, 6, 9, 5, 4, 7]);
+    assert_eq!(heap.peek(), Some(&9));
+    assert_eq!(heap.pop(), Some(9));
+    assert_eq!(heap.pop(), Some(8));
+    assert_eq!(heap.pop(), Some(7));
 }

@@ -17,4 +17,4 @@ Implementing examples from Chapter 16, *Collections*.
 
 ## Next
 
-Read Chapter 11, *Traits and Generics*, continuing from page 270.
+Read Chapter 12, *Operator Overloading*.

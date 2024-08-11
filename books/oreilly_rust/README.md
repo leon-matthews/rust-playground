@@ -12,7 +12,7 @@
 
 ## Currently
 
-Implementing examples from Chapter 16, *Collections*.
+Continue implementing examples from Chapter 17, *Strings and Text*, from page 449.
 
 
 ## Next

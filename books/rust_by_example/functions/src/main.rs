@@ -11,6 +11,11 @@ fn main() {
     capturing_immutable();
     capturing_mutable();
     capturing_move();
+    functions_taking_closures();
+    function_returning_closures();
+    std_find();
+    higher_order_functions();
+    diverging_functions();
 }
 
 
@@ -230,10 +235,8 @@ fn capturing_move() {
 
     // Can only be called once
     consume();
-
     // error[E0382]: use of moved value: `consume`
     //~ consume();
-
 
     // Move can be forced using `move`
     let haystack = vec![2, 3, 5, 7];
@@ -250,4 +253,94 @@ fn capturing_move() {
     // We didn't *need* to move haystack. Removing `move` will allow this line.
     // error[E0382]: borrow of moved value: `haystack`
     //~ println!("There are {} primes in existence", haystack.len());
+}
+
+
+/// Writing functions that take closures as arguments.
+/// Generics are required because each closure is its own type - a new
+/// anonymous structure is created to hold captured variables then a marker
+/// trait is applied.
+fn functions_taking_closures() {
+    // Take closure and call it
+    fn apply<F>(f: F) -> () where F: FnOnce() {
+        f()
+    }
+
+    // Put a little sugar on it (note return syntax)
+    fn apply2(f: impl FnOnce() -> ()) {
+        f()
+    }
+
+    apply(|| println!("Hello, world") );
+    apply2(|| println!("Hello, world") );
+}
+
+
+/// Possible, but requires using `impl` as type is anonymous
+fn function_returning_closures() {
+    // Fn
+    fn create_fn() -> impl Fn() {
+        let text = "Fn".to_string();
+        move || println!("This is a {}", text)
+    }
+
+    let fn_plain = create_fn();
+    fn_plain();
+    create_fn()();
+
+    // FnMut
+    fn create_fnmut() -> impl FnMut() {
+        let text = "FnMut".to_string();
+        move || println!("This is a {}", text)
+    }
+
+    let mut fn_mut = create_fnmut();
+    fn_mut();
+}
+
+/**
+Iterator::find is a function which iterates over an iterator and searches for
+the first value which satisfies some condition. If none of the values satisfy
+the condition, it returns None.
+*/
+fn std_find() {
+    // find()
+    // Provides reference to item as closure's argument
+    let v = vec![2, 3, 5, 7, 11, 13, 17, 19];
+    println!("Find 11: {:?}", v.iter().find(|&x| *x == 11));
+    println!("Find 111: {:?}", v.iter().find(|&x| *x == 111));
+
+    // position()
+    // Provides
+    println!("Position of 11: {:?}", v.iter().position(|&x| x == 11));
+    println!("Position of 111: {:?}", v.iter().position(|&x| x == 111));
+}
+
+
+/// Functions that take one or more functions and/or produce a more useful function
+fn higher_order_functions() {
+    fn is_odd(n: u32) -> bool {
+        n % 2 == 1
+    }
+
+    println!("Find the sum of all the numbers with odd squares under 1000");
+    let upper = 1_000;
+    let sum_of_squared_odd_numbers: u32 =
+        (0..).map(|n| n * n)            // ALL natural numbers squared
+        .take_while(|&n| n < upper)     // Stop when squares exceed limit
+        .filter(|&n| is_odd(n))         // Pass through only odd numbers
+        .sum();                         // Accumulate the sum
+
+    dbg!(&sum_of_squared_odd_numbers);
+}
+
+
+/// Diverging functions never return.
+/// They are marked using !, which is an empty type.
+fn diverging_functions() {
+    fn foo() {
+        panic!("This call never returns.");
+    }
+
+    println!("Hello");
 }

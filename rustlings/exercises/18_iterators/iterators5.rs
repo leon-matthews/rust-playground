@@ -6,13 +6,15 @@
 
 use std::collections::HashMap;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Progress {
     None,
     Some,
     Complete,
 }
 
+
+/// How many of the values found in `map` have the given progress value?
 fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     let mut count = 0;
     for val in map.values() {
@@ -23,13 +25,14 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     count
 }
 
-// TODO: Implement the functionality of `count_for` but with an iterator instead
-// of a `for` loop.
+
+/// As `count_for`, but without using for loop
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
-    // `map` is a hash map with `String` keys and `Progress` values.
-    // map = { "variables1": Complete, "from_str": None, … }
+    map.values().filter(|&v| *v == value).count()
 }
 
+
+/// Count matching values found in several maps, given by slice.
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
     let mut count = 0;
     for map in collection {
@@ -42,12 +45,13 @@ fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progres
     count
 }
 
-// TODO: Implement the functionality of `count_collection_for` but with an
-// iterator instead of a `for` loop.
+
+/// Same as `count_collection_for`, but as an iterator expression
 fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
-    // `collection` is a slice of hash maps.
-    // collection = [{ "variables1": Complete, "from_str": None, … },
-    //               { "variables2": Complete, … }, … ]
+    collection.iter().fold(0, |count, map| count + count_iterator(map, value))
+
+    // Update: Solution used `map()`, which is a more readable solution
+    //~ collection.iter().map(|map| count_iterator(map, value)).sum()
 }
 
 fn main() {

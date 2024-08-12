@@ -1,6 +1,37 @@
 
+use std::collections::HashMap;
+use std::time::Duration;
+
 use rand::RngCore;
 use rand::rngs::SmallRng;
+
+
+/// What a player rolled, and where they ended up
+struct Turn {
+    roll: u8,
+    result: u8,
+}
+
+
+/// Entire game history.
+/// Last turn must be an exact roll to land on 100.
+struct Game {
+    turns: Vec<Turn>,
+}
+
+
+/// Aggregate results from many, many games
+struct BenchmarkResult {
+    elapsed: Duration,
+    num_games: usize,
+
+    /// Mapping of game length against number of games.
+    counts: HashMap<usize, usize>,
+
+    /// Full roll and position history of shortest and longest games played.
+    shortest: Game,
+    longest: Game,
+}
 
 
 /// Play a single game of Snakes and Ladders solitaire

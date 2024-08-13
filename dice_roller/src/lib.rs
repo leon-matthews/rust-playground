@@ -1,7 +1,7 @@
 #![allow(dead_code)]
-#![allow(unused_variables)]
 
-use rand::prelude::*;
+use rand::RngCore;
+use rand::rngs::SmallRng;
 
 
 #[derive(Debug)]
@@ -11,10 +11,11 @@ struct DiceRoller {
     current: usize,
 }
 
+
 impl DiceRoller {
-    fn new(rng: SmallRng) -> DiceRoller {
+    fn new(rng: SmallRng) -> Self {
         let buffer = [0_u8; 21];
-        let mut new = DiceRoller {
+        let mut new = Self {
             rng,
             buffer,
             current: 0,
@@ -83,14 +84,40 @@ pub fn build_array_stdlib(number: u64) -> [u8; 16] {
 mod tests {
     use super::*;
 
+    use rand::SeedableRng;
+
     const ZERO: u64 = 0;
     const INCREMENTING: u64 = 0x0102030405060708;
 
+    /// Create dice roller using deterministic (and terrible) seed for testing.
+    fn create_roller() -> DiceRoller {
+        let rng_bad = SmallRng::seed_from_u64(0x00);
+        DiceRoller::new(rng_bad)
+    }
+
+    /// Build a vector of `count` d6 rolls
+    fn roll_many(count: usize) -> Vec<u8> {
+        let mut roller = create_roller();
+        std::iter::from_fn(|| Some(roller.d6()))
+            .take(count)
+            .collect()
+    }
+
     #[test]
-    fn create_dice_roller() {
-        let rng = SmallRng::from_rng(&mut rand::thread_rng()).unwrap();
-        let mut roller = DiceRoller::new(rng);
-        assert_eq!(roller.d6(), 7);
+    fn roll_d6() {
+        let mut roller = create_roller();
+        assert_eq!(roller.d6(), 5);
+        assert_eq!(roller.d6(), 2);
+        assert_eq!(roller.d6(), 3);
+    }
+
+    #[test]
+    fn forty_rolls() {
+        let expected = [
+            5, 2, 3, 5, 2, 5, 6, 5, 1, 6, 6, 5, 5, 2, 2, 4, 1, 3, 2, 5,
+            4, 4, 5, 2, 1, 5, 3, 4, 4, 6, 2, 1, 3, 3, 1, 1, 3, 4, 1, 1,
+        ];
+        assert_eq!(roll_many(40), expected);
     }
 
     #[test]

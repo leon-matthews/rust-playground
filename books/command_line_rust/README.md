@@ -13,18 +13,16 @@
 
 ## Currently
 
-Finished using the *build* API from `clap` to parse the command-line arguments.
-
-
-## Next
-
-Write tests for argument parsing, refactoring current approach to allow for
-testing as needed.
+Continue with `uniqr` program from Chapter 6.
 
 
 ## Key Techniques
 
 ### wcr
 
-  - Use `std::io::cursor` to create file-like objects for testing in the
+  - Use `std::io::Cursor` to create file-like objects for testing in the
     function `test_count()` in *lib.rs*.
+  - Read lines from file using the same string buffer,
+    ie. `file.read_line(&mut line)?`
+
+### uniqr

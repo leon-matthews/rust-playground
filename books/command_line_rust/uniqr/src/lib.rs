@@ -1,4 +1,7 @@
 
+use std::fs::File;
+use std::io::{self, BufRead, BufReader};
+
 use anyhow::{Result};
 use clap::Parser;
 
@@ -20,6 +23,14 @@ pub struct Args {
     count: bool,
 }
 
+
+/// Open file or stdin
+fn open(filename: &str) -> Result<Box<dyn BufRead>> {
+    match filename {
+        "-" => Ok(Box::new(BufReader::new(io::stdin()))),
+        _ => Ok(Box::new(BufReader::new(File::open(filename)?))),
+    }
+}
 
 /// Command-line entry point
 pub fn run() -> Result<()> {

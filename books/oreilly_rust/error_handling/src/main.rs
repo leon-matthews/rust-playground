@@ -1,8 +1,21 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
 
-/// Programming Rust (O'Reilly, 2nd Edition)
-/// Chapter 7: Error Handling
+/*!
+Programming Rust (O'Reilly, 2nd Edition)
+Chapter 7: Error Handling
+
+Panic when:
+
+- Out-of-bounds array access.
+- Integer division by zero.
+- Calling .exect() an a Result that happens to be `Err`.
+- Assertion error.
+
+*/
+
+use std::error::Error;
+use std::fmt;
 
 
 #[derive(Debug, Clone)]

@@ -26,7 +26,6 @@ fn pointers() {
     // `&T`     Immutable, shared reference. Read-only.
     // `&mut T` Mutable, exclusive reference.
 
-
     // Boxes
     /////////
     // Force allocation on the heap

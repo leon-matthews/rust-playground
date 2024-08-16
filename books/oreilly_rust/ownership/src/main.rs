@@ -7,11 +7,11 @@ use std::rc::Rc;
 
 
 fn main() {
-    //~ arguments_take_ownership();
-    //~ vectors_disallow_moves();
-    //~ consume_vector_contents();
-    //~ take_vector_contents();
-    //~ reference_counting();
+    arguments_take_ownership();
+    vectors_disallow_moves();
+    consume_vector_contents();
+    take_vector_contents();
+    reference_counting();
     shared_reference();
     mutable_references();
 }

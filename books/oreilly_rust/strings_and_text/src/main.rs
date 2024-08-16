@@ -1,5 +1,6 @@
-
 #![allow(unused_variables)]
+
+use std::str::FromStr;
 
 
 fn main() {
@@ -7,6 +8,7 @@ fn main() {
     string_methods();
     from_string();
     to_string();
+    slice_methods();
 }
 
 
@@ -26,60 +28,6 @@ fn char_methods() {
     assert_eq!(char::from_u32(0x1F980), Some('🦀'));
 }
 
-
-/**
-Strings live on the heap and are resizable.
-
-Can be dereferenced to `&str`, so can use methods from either str or String.
-Methods are either imlemented on str on String depending on whether the method
-needs a resizeable buffer or can use the text in place.
-
-Represented under the covers as a `Vec<u8>` guarenteed to contain valid UTF-8.
-*/
-fn string_methods() {
-    // Create
-    let s = String::new();
-    let s = String::with_capacity(1_024);
-    let s = "Bizarre Bear Story".to_string();
-    let s = "Borderlands"[1..6].to_owned();
-    assert_eq!(s, String::from("order"));
-
-    let words = vec!["Bizarre", "Bear", "Story"];
-    let mut s: String = words.join(" ");
-    println!("{s}");
-
-    // Inspect
-    assert_eq!(s.is_empty(), false);
-    println!("length: {}, capacity {}", s.len(), s.capacity());
-    assert_eq!(s.is_char_boundary(8), true);
-
-    // Append and insert
-    s.push('!');
-    println!("{s}");
-    s.push_str(" JFK? ");
-    println!("{s}");
-    s.extend(words);
-    println!("{s}");
-    println!("length: {}, capacity {}", s.len(), s.capacity());
-
-    // `replace()` returns a new string
-    let s2 = s.replace("BizarreBearStory", "");
-
-    // As do the case-conversion methods
-    let s3 = s.to_uppercase();
-    println!("{s3}");
-    let s4 = s.to_lowercase();
-    println!("{s4}");
-
-    // Remove
-    s.clear();
-    println!("length: {}, capacity {}", s.len(), s.capacity());
-    s.shrink_to_fit();
-    println!("length: {}, capacity {}", s.len(), s.capacity());
-}
-
-
-use std::str::FromStr;
 
 /**
 Parse other types from string.
@@ -142,4 +90,99 @@ fn to_string() {
 
     // `Debug`
     assert_eq!(format!("{:?}", vec![2, 3, 5, 7]), "[2, 3, 5, 7]");
+}
+
+
+/**
+Strings live on the heap and are resizable.
+
+Can be dereferenced to `&str`, so can use methods from either str or String.
+Methods are either imlemented on str on String depending on whether the method
+needs a resizeable buffer or can use the text in place.
+
+Represented under the covers as a `Vec<u8>` guarenteed to contain valid UTF-8.
+*/
+fn string_methods() {
+    // Create
+    let s = String::new();
+    let s = String::with_capacity(1_024);
+    let s = "Bizarre Bear Story".to_string();
+    let s = "Borderlands"[1..6].to_owned();
+    assert_eq!(s, String::from("order"));
+
+    let words = vec!["Bizarre", "Bear", "Story"];
+    let mut s: String = words.join(" ");
+    println!("{s}");
+
+    // Inspect
+    assert_eq!(s.is_empty(), false);
+    println!("length: {}, capacity {}", s.len(), s.capacity());
+    assert_eq!(s.is_char_boundary(8), true);
+
+    // Append and insert
+    s.push('!');
+    println!("{s}");
+    s.push_str(" JFK? ");
+    println!("{s}");
+    s.extend(words);
+    println!("{s}");
+    println!("length: {}, capacity {}", s.len(), s.capacity());
+
+    // As do the case-conversion methods
+    let s3 = s.to_uppercase();
+    println!("{s3}");
+    let s4 = s.to_lowercase();
+    println!("{s4}");
+
+    // Remove
+    s.clear();
+    println!("length: {}, capacity {}", s.len(), s.capacity());
+    s.shrink_to_fit();
+    println!("length: {}, capacity {}", s.len(), s.capacity());
+}
+
+
+/// Methods implemented on an immutable `str` slice of UTF-8 text
+fn slice_methods() {
+    let bear = "Bizarre Bear Story".to_string();
+
+    // `chars()` iterates over characters
+    assert_eq!(bear.chars().collect::<Vec<_>>().len(), 18);
+
+    // `char_indices()` iterates over byte offset and char
+    let crab = "c🦀b";
+    let indices = crab.char_indices().collect::<Vec<_>>();
+    assert_eq!(indices, [(0, 'c'), (1, '🦀'), (5, 'b')]);
+
+    // `contains()` -> bool
+    assert_eq!(bear.contains("Bear"), true);
+
+    // `ends_with()` -> bool
+    assert!(!bear.ends_with("Bizarre"));
+    assert!(bear.ends_with("Story"));
+
+    // `find()` -> Option<usize>
+    assert_eq!(bear.find("Bear"), Some(8));
+
+    // `replace()` -> new String
+    let s2 = bear.replace("BizarreBearStory", "");
+
+    // `starts_with()` -> bool
+    assert!(bear.starts_with("Bizarre"));
+    assert!(!bear.starts_with("Story"));
+
+    // `split_whitespace()` (also `split_ascii_whitespace()`)
+    let words: Vec<String> = bear.split_whitespace().map(From::from).collect();
+    assert_eq!(words, ["Bizarre", "Bear", "Story"]);
+
+    // `strip_prefix()`
+    // `strip_suffix()`
+    assert_eq!("README.rst".strip_suffix(".rst"), Some("README"));
+    assert_eq!("README.rst".strip_prefix("readme"), None);
+
+    // `trim()`
+    assert_eq!(" not space   ".trim(), "not space");
+
+    // `trim_matches()`
+    assert_eq!("0000088700".trim_matches(['0', '7']), "88");
 }

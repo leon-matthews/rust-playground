@@ -12,7 +12,7 @@
 
 ## Currently
 
-Continue implementing examples from Chapter 17, *Strings and Text*, from page 449.
+Continue implementing examples from Chapter 17, *Strings and Text*, from page 451.
 
 
 ## Next

@@ -1,9 +1,9 @@
 
 use clap::Parser;
-use rand::prelude::*;
+
 use std::time::Instant;
 
-use snakes_and_ladders::play_game;
+use snakes_and_ladders;
 
 
 /// Play many, many solo games of Snakes and Ladders
@@ -24,17 +24,11 @@ fn main() {
     let args = Args::parse();
     println!("{:?}", args);
 
-    // Use strong default RNG to seed faster non-cryptographic generator.
-    // We can then create multiple small RNGs, one per work-unit.
-    let mut thread_rng = rand::thread_rng();
-    let mut rng = SmallRng::from_rng(&mut thread_rng).unwrap();
-
     let timer = Instant::now();
-    let num_games = 1e6 as usize;
-    let mut num_rolls = 0;
-    for _ in 1..=num_games {
-        num_rolls = play_game(&mut rng);
-    }
-    println!("Played {} games in {:?}", num_games, timer.elapsed());
+    let num_games: usize = 1_000_000;
+    let num_rolls = snakes_and_ladders::play_games(num_games);
+    let elapsed = timer.elapsed();
+    println!("Played {} games in {:?}", num_games, elapsed);
+    println!("Games for second {}", num_games as f64 / elapsed.as_secs_f64());
     println!("Finished last game in {} rolls", num_rolls);
 }

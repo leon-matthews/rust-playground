@@ -4,9 +4,11 @@ use std::time::Duration;
 
 use rand::RngCore;
 use rand::rngs::SmallRng;
+use rand::prelude::*;
 
 
 /// What a player rolled, and where they ended up
+#[derive(Debug)]
 struct Turn {
     roll: u8,
     result: u8,
@@ -15,8 +17,26 @@ struct Turn {
 
 /// Entire game history.
 /// Last turn must be an exact roll to land on 100.
+#[derive(Debug)]
 struct Game {
     turns: Vec<Turn>,
+}
+
+
+impl Game {
+    fn new() -> Self {
+        Self {
+            turns: Vec::new(),
+        }
+    }
+
+    fn add_turn(&mut self, roll: u8, result: u8) {
+        self.turns.push(Turn { roll, result });
+    }
+
+    fn clear(&mut self) {
+        self.turns.clear();
+    }
 }
 
 
@@ -34,15 +54,34 @@ struct BenchmarkResult {
 }
 
 
-/// Play a single game of Snakes and Ladders solitaire
-pub fn play_game(rng: &mut SmallRng) -> i32 {
+pub fn play_games(num_games: usize) -> usize {
+    // Use strong default RNG to seed faster non-cryptographic generator.
+    // We can then create multiple small RNGs, one per work-unit.
+    let mut thread_rng = rand::thread_rng();
+    let mut rng = SmallRng::from_rng(&mut thread_rng).unwrap();
+
+    let mut game = Game::new();
     let mut num_rolls = 0;
-    let mut place = 0;
+    for _ in 1..=num_games {
+        num_rolls = play_game(&mut rng, &mut game);
+        game.clear();
+    }
+
+    dbg!(game.turns.capacity());
+
+    num_rolls
+}
+
+
+/// Play a single game of Snakes and Ladders solitaire
+fn play_game(rng: &mut SmallRng, game: &mut Game) -> usize {
+    let mut num_rolls: usize = 0;
+    let mut place: u8 = 0;
 
     loop {
         // Roll the dice
-        //~ let roll = rng.gen_range(1..=6);            // 227ms for 1e6 games
-        let roll = rng.next_u64() % 6 + 1;              // 176ms for 1e6 games
+        //~ let roll = rng.gen_range(1..=6);
+        let roll: u8 = (rng.next_u64() % 6 + 1) as u8;
         num_rolls += 1;
 
         // Where did you end up?
@@ -79,6 +118,9 @@ pub fn play_game(rng: &mut SmallRng) -> i32 {
             // Normal move
             _ => landed,
         };
+
+        // Save turn
+        game.add_turn(roll, place);
 
         if place == 100 { break; }
     };

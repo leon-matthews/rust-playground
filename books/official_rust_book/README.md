@@ -12,7 +12,7 @@
 
 Continue reading the new Chapter 4, with quizes of course!
 
-https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html
+https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-not-enough-permissions
 
 
 ## Next

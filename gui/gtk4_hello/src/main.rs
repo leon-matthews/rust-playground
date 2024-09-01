@@ -1,4 +1,5 @@
 
+use gtk4 as gtk;
 use gtk::prelude::*;
 use gtk::{glib, Application, ApplicationWindow, Button};
 
@@ -31,15 +32,19 @@ fn build_ui(app: &Application) {
     // Connect to "clicked" signal of `button`
     button.connect_clicked(|button| {
         // Set the label to "Hello World!" after the button has been clicked on
-        button.set_label("Hello World!");
+        button.set_label("Thank You!");
     });
 
     // Create a window and set the title
     let window = ApplicationWindow::builder()
         .application(app)
         .title("My GTK App")
-        .child(&button)
+        .default_width(250)
+        .default_height(70)
         .build();
+
+    // Add button to window
+    window.set_child(Some(&button));
 
     // Present window
     window.present();

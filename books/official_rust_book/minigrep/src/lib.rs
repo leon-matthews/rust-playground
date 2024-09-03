@@ -1,11 +1,10 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
 
 use std::env;
 use std::error::Error;
 use std::fs;
 
 
+/// Configuration for this run
 pub struct Config {
     pub query: String,
     pub file_path: String,
@@ -14,6 +13,8 @@ pub struct Config {
 
 
 impl Config {
+
+    /// Build config from command-line arguments and environment variables
     pub fn build(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
             return Err("Not enough arguments");
@@ -27,6 +28,7 @@ impl Config {
 }
 
 
+/// Search file for matches using the given `Config`
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
@@ -43,6 +45,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 
+/// Return lines matching `query` from multiline `contents` string.
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results = Vec::new();
     for line in contents.lines() {
@@ -53,6 +56,8 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     results
 }
 
+
+/// Same as `search()`, but allows for case-insensitive matching
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results = Vec::new();
     let query = query.to_lowercase();

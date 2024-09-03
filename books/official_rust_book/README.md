@@ -8,13 +8,13 @@
 [Interactive Version](https://doc.rust-lang.org/book/)
 
 
-## Currently
+## Next
 
-Continue reading the new Chapter 4, with quizes of course!
-
-https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-not-enough-permissions
+Work through examples in Chapter 13, starting with closures.
 
 
 ## Next
 
-Read *Iterators* section from Chapter 13, then attempt rustlings again.
+Continue reading the Brown University versino of Chapter 4, with quizes of course!
+
+https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-not-enough-permissions

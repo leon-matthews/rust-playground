@@ -12,9 +12,4 @@
 
 ## Currently
 
-Continue implementing examples from Chapter 17, *Strings and Text*, from page 451.
-
-
-## Next
-
-Read Chapter 12, *Operator Overloading*.
+Read and work through examples from Chapter 18, *Input and Output*

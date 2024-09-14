@@ -9,6 +9,8 @@ fn main() {
     from_string();
     to_string();
     slice_methods();
+    formatting_strings();
+    formatting_numbers();
 }
 
 
@@ -185,4 +187,53 @@ fn slice_methods() {
 
     // `trim_matches()`
     assert_eq!("0000088700".trim_matches(['0', '7']), "88");
+}
+
+/**
+Examples of formatting strings.
+
+Two parts, both optional: {which:how}
+
+which:
+    Arguments by either position, index, or name.
+how:
+    Several parts after colon, all optional:
+        - text length limit
+        - minimum width
+        - alignment
+        - padding
+*/
+fn formatting_strings() {
+    let s = "bookends";
+    assert_eq!(format!("{s}"), "bookends");
+    assert_eq!(format!("{s:4}"), "bookends");               // Minimum widths
+    assert_eq!(format!("{s:12}"), "bookends    ");
+    assert_eq!(format!("{s:.4}"), "book");                  // Maximum width
+    assert_eq!(format!("{s:6.4}"), "book  ");               // Max + min
+    assert_eq!(format!("{s:>12}"), "    bookends");         // Alignment
+    assert_eq!(format!("{s:^12}"), "  bookends  ");
+    assert_eq!(format!("{s:=^12}"), "==bookends==");        // Change padding
+    assert_eq!(format!("{s:=>6.4}"), "==book");             // All at once
+}
+
+
+/**
+Examples of formatting numbers.
+
+Similar to strings, but with additional capabilities.
+*/
+fn formatting_numbers() {
+    // Integers
+    let n = 1234;
+    assert_eq!(format!("{n:>+6}"), " +1234");               // Force sign, alignment
+    assert_eq!(format!("{n:b}"), "10011010010");            // Binary
+    assert_eq!(format!("{n:#06x}"), "0x04d2");              // Hex, padding
+    assert_eq!(format!("{n:#06X}"), "0x04D2");              // Hex, upper-case
+
+    // Floating-point
+    let f = 1234.56789;
+    assert_eq!(format!("{f}"), "1234.56789");               // Default
+    assert_eq!(format!("{f:.2}"), "1234.57");               // Round
+    assert_eq!(format!("{f:.1e}"), "1.2e3");                // Rounded scientific
+    assert_eq!(format!("{f:.1E}"), "1.2E3");                // Upper-case
 }

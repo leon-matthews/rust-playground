@@ -2,5 +2,17 @@
 name = "huhu"
 version = "0.1.0"
 edition = "2021"
+authors = ["Leon Matthews"]
+homepage = "https://lost.co.nz/"
+description = "Explore Apache logfiles"
+
 
 [dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+pretty_assertions = "1"

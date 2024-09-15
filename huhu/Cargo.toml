@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Leon Matthews"]
 homepage = "https://lost.co.nz/"
-description = "Explore Apache logfiles"
+description = "Summarise Apache logfiles"
 
 
 [dependencies]

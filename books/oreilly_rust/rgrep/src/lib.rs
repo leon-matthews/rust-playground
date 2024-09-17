@@ -3,10 +3,9 @@
 
 use std::error::Error;
 use std::fs::File;
-use std::io::{self, BufReader};
 use std::io::prelude::*;
+use std::io::{self, BufReader};
 use std::path::PathBuf;
-
 
 pub fn command_line() -> Result<(), Box<dyn Error>> {
     // Get command lines arguments...
@@ -17,8 +16,8 @@ pub fn command_line() -> Result<(), Box<dyn Error>> {
     };
     let files: Vec<PathBuf> = args.map(PathBuf::from).collect();
 
-    // No files? Search stdin instead.
     if files.is_empty() {
+        // No files? Search stdin instead.
         let stdin = io::stdin();
         grep(&target, stdin.lock())?;
     } else {
@@ -30,9 +29,10 @@ pub fn command_line() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-
 /// Print lines in `reader` that contain the `target` string.
-fn grep<R>(target: &str, reader: R) -> io::Result<()> where R: BufRead
+fn grep<R>(target: &str, reader: R) -> io::Result<()>
+where
+    R: BufRead,
 {
     for result in reader.lines() {
         let line = result?;

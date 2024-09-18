@@ -52,12 +52,15 @@ mod tests {
 
     #[test]
     fn test_parse_valid_line() {
-        let line = "contemporano.com 194.233.82.92 - - \
-            [12/Aug/2024:00:00:50 +1200] \
-            \"GET /vendor/ HTTP/1.1\" \
-            301 322 \"-\" \
-            \"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36\" \
-            111";
+        let line = concat!(
+            "contemporano.com 194.233.82.92 - - ",
+            "[12/Aug/2024:00:00:50 +1200] ",
+            "\"GET /vendor/ HTTP/1.1\" ",
+            "301 322 \"-\" ",
+            "\"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 ",
+            "(KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36\" ",
+            "111"
+        );
 
         let record = Record::parse(line);
         assert_eq!(record.hostname, "contemporano.com");

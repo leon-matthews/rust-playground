@@ -40,7 +40,7 @@ impl Record {
         let pattern = Regex::new(pattern).expect("Error compiling regex");
         let captures = pattern.captures(line).expect("No match found");
         let hostname = String::from(captures.get(1).unwrap().as_str());
-        let microseconds = captures.get(2).unwrap().as_str().parse().unwrap();
+        let microseconds = captures.get(2).map_or("", |m| m.as_str()).parse().unwrap_or_default();
         Record { hostname, microseconds }
     }
 }

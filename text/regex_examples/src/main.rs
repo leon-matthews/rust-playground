@@ -34,6 +34,12 @@ fn main() {
         is_version_static(&version),
         version,
     );
+
+    // Extract captures
+    extract_captures("2.4.31");
+
+    // Capture AND parse
+    capture_and_parse("2.4.31");
 }
 
 
@@ -48,4 +54,38 @@ fn is_version(haystack: &str) -> bool {
 /// As `is_version()`, but regex contructed on first use
 fn is_version_static(haystack: &str) -> bool {
     SEMVER_REGEX.is_match(haystack)
+}
+
+
+fn extract_captures(version: &str) {
+    let Some(captures) = SEMVER_REGEX.captures(version) else {
+        eprintln!("Semver regex failed to  match version {:?}", version);
+        return;
+    };
+    println!(
+        "Major:{:?} Minor:{:?} Patch:{:?}",
+        &captures["major"],
+        &captures["minor"],
+        &captures["patch"],
+    );
+}
+
+
+/// Parse integers out of regex with decent error handling
+fn capture_and_parse(version: &str) {
+    let Some(captures) = SEMVER_REGEX.captures(version) else {
+        eprintln!("Semver regex failed to  match version {:?}", version);
+        return;
+    };
+
+    let parse_usize = |key| captures.name(key)
+        .map_or("", |m| m.as_str())
+        .parse()
+        .unwrap_or_default();
+
+    let major: usize = parse_usize("major");
+    let minor: usize = parse_usize("minor");
+    let patch: usize = parse_usize("patch");
+
+    println!("Major:{major:?} Minor:{minor:?} Patch:{patch:?}");
 }

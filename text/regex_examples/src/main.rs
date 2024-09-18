@@ -4,9 +4,17 @@ use regex::Regex;
 
 
 lazy_static! {
-    static ref VERSION_REGEX: Regex = Regex::new(
-        r"(\d+)\.(\d+)\.(\d+)",
-    ).expect("Error parsing regex");
+    // Official Semantic Versioning 2.0.0 Regex
+    // https://semver.org/
+    static ref SEMVER_REGEX: Regex = Regex::new(concat!(
+        r"^(?P<major>0|[1-9]\d*)",
+        r"\.",
+        r"(?P<minor>0|[1-9]\d*)",
+        r"\.",
+        r"(?P<patch>0|[1-9]\d*)",
+        r"(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?",
+        r"(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$",
+    )).expect("Error parsing regex");
 }
 
 
@@ -39,5 +47,5 @@ fn is_version(haystack: &str) -> bool {
 
 /// As `is_version()`, but regex contructed on first use
 fn is_version_static(haystack: &str) -> bool {
-    VERSION_REGEX.is_match(haystack)
+    SEMVER_REGEX.is_match(haystack)
 }

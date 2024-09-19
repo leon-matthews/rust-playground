@@ -1,0 +1,9 @@
+[package]
+name = "word_count_bstr"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0"
+bstr = "1.10"
+rustc-hash = "2.0"

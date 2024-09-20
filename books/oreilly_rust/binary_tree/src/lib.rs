@@ -15,14 +15,26 @@ pub struct TreeNode<T> {
 
 
 impl<T: Ord> BinaryTree<T> {
+    /// Create new, empty BinaryTree.
+    pub fn empty() -> Self {
+        BinaryTree::Empty
+    }
+
+    /// Create new BinaryTree with the given root value.
+    pub fn new(value: T) -> Self {
+        BinaryTree::<T>::NonEmpty(Box::new(TreeNode {
+            element: value,
+            left: BinaryTree::Empty,
+            right: BinaryTree::Empty,
+        }))
+    }
+
+    /// Add new value to the tree.
+    /// Note that nodes, including the root, are not moved during operation.
     pub fn add(&mut self, value: T) {
         match *self {
             BinaryTree::Empty => {
-                *self = BinaryTree::NonEmpty(Box::new(TreeNode {
-                    element: value,
-                    left: BinaryTree::Empty,
-                    right: BinaryTree::Empty,
-                }))
+                *self = BinaryTree::new(value)
             },
             BinaryTree::NonEmpty(ref mut node) => {
                 if value <= node.element {
@@ -68,6 +80,18 @@ mod tests {
             },
         )"#
     };
+
+    #[test]
+    fn test_empty() {
+        let tree: BinaryTree<String> = BinaryTree::empty();
+        assert_eq!(format!("{tree:?}"), "Empty");
+    }
+
+    #[test]
+    fn test_new() {
+        let tree = BinaryTree::new("Jupiter");
+        assert_eq!(format!("{tree:?}"), SINGLE_NODE_EXPECTED);
+    }
 
     #[test]
     fn test_single_node_manually() {

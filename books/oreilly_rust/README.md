@@ -13,3 +13,7 @@
 ## Currently
 
 Read and work through examples from Chapter 18, *Input and Output*
+
+## Next
+
+Implement custom iterator for our `BinaryTree` type, see Chapter 15, page 388.

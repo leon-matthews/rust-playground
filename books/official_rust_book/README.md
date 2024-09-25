@@ -8,13 +8,9 @@
 [Interactive Version](https://doc.rust-lang.org/book/)
 
 
-## Next
+## Current
 
-Work through examples in Chapter 13, starting with closures.
+Continue with examples from Chapter 16, *Fearless Concurrency*
 
+https://doc.rust-lang.org/book/ch16-02-message-passing.html
 
-## Next
-
-Continue reading the Brown University versino of Chapter 4, with quizes of course!
-
-https://rust-book.cs.brown.edu/ch04-03-fixing-ownership-errors.html#fixing-an-unsafe-program-not-enough-permissions

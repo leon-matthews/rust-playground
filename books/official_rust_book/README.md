@@ -10,6 +10,6 @@
 
 ## Current
 
-Continue with examples from Chapter 16, *Fearless Concurrency*
+Continue with examples from Chapter 17, *Object-Oriented Programming*
 
-https://doc.rust-lang.org/book/ch16-02-message-passing.html
+https://doc.rust-lang.org/book/ch17-00-oop.html

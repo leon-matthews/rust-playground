@@ -13,4 +13,3 @@
 Continue with examples from Chapter 16, *Fearless Concurrency*
 
 https://doc.rust-lang.org/book/ch16-02-message-passing.html
-

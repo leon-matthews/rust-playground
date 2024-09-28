@@ -1,6 +1,7 @@
 
 use binary_tree::BinaryTree;
 
+
 fn main() {
     let planets = vec![
         "Mercury",

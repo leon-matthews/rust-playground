@@ -1,4 +1,5 @@
 
+/// `BinaryTree`s are either empty or contain a boxed `TreeNode`
 #[derive(Debug)]
 pub enum BinaryTree<T> {
     Empty,
@@ -6,11 +7,31 @@ pub enum BinaryTree<T> {
 }
 
 
+/// Every `TreeNode` contain data, and possibly child `BinaryTree`s.
 #[derive(Debug)]
 pub struct TreeNode<T> {
     element: T,
     left: BinaryTree<T>,
     right: BinaryTree<T>,
+}
+
+
+/// Iterator over `BinaryTree`.
+/// Structure hold's the current state of this iteration.
+struct TreeIter<'a, T> {
+    // Stack of references to tree nodes.
+    unvisited: Vec<&'a TreeNode<T>>
+}
+
+
+impl<'a, T: 'a> TreeIter<'a, T> {
+    /// Walk the left edge of the tree, pushing every node seen onto the stack.
+    fn push_left_edge(&mut self, mut tree: &'a BinaryTree<T>) {
+        while let BinaryTree::NonEmpty(ref node) = *tree {
+            self.unvisited.push(node);
+            tree = &node.left;
+        }
+    }
 }
 
 

@@ -18,6 +18,7 @@ pub struct TreeNode<T> {
 
 /// Iterator over `BinaryTree`.
 /// Structure hold's the current state of this iteration.
+#[derive(Debug)]
 struct TreeIter<'a, T> {
     // Stack of references to tree nodes.
     unvisited: Vec<&'a TreeNode<T>>
@@ -66,6 +67,14 @@ impl<T: Ord> BinaryTree<T> {
             },
         }
     }
+
+    /// Create iterator over a shared reference
+    pub fn iter(&self) -> TreeIter<T> {
+        // Initialise stack with nodes along left-hand edge
+        let mut iter = TreeIter { unvisited: Vec::new() };
+        iter.push_left_edge(self);
+        iter
+    }
 }
 
 
@@ -101,6 +110,36 @@ mod tests {
             },
         )"#
     };
+
+    /// Helper function to create tree of planet names
+    fn create_planets() -> BinaryTree<String> {
+        let planets = vec![
+            "Mercury",
+            "Venus",
+            "Earth",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Neptune",
+        ];
+
+        let mut tree = BinaryTree::empty();
+        for planet in planets {
+            tree.add(String::from(planet));
+        }
+        tree
+    }
+
+    #[test]
+    fn test_iter_initialisation() {
+        // Newly created iterator should contain the two nodes that make up
+        // the left-hand edge of the tree.
+        let tree = create_planets();
+        let iter = tree.iter();
+        assert_eq!(iter.unvisited.len(), 2);
+        assert_eq!(iter.unvisited[0].element, "Mercury");
+        assert_eq!(iter.unvisited[1].element, "Earth");
+    }
 
     #[test]
     fn test_empty() {

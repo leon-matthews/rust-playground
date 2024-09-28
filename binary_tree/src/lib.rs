@@ -16,26 +16,6 @@ pub struct TreeNode<T> {
 }
 
 
-/// Iterator over `BinaryTree`.
-/// Structure hold's the current state of this iteration.
-#[derive(Debug)]
-struct TreeIter<'a, T> {
-    // Stack of references to tree nodes.
-    unvisited: Vec<&'a TreeNode<T>>
-}
-
-
-impl<'a, T: 'a> TreeIter<'a, T> {
-    /// Walk the left edge of the tree, pushing every node seen onto the stack.
-    fn push_left_edge(&mut self, mut tree: &'a BinaryTree<T>) {
-        while let BinaryTree::NonEmpty(ref node) = *tree {
-            self.unvisited.push(node);
-            tree = &node.left;
-        }
-    }
-}
-
-
 impl<T: Ord> BinaryTree<T> {
     /// Create new, empty BinaryTree.
     pub fn empty() -> Self {
@@ -69,11 +49,56 @@ impl<T: Ord> BinaryTree<T> {
     }
 
     /// Create iterator over a shared reference
-    pub fn iter(&self) -> TreeIter<T> {
+    fn iter(&self) -> TreeIter<T> {
         // Initialise stack with nodes along left-hand edge
         let mut iter = TreeIter { unvisited: Vec::new() };
         iter.push_left_edge(self);
         iter
+    }
+}
+
+
+/// Implement the `IntoIterator` trait for `BinaryTree`
+impl<'a, T: 'a> IntoIterator for &'a BinaryTree<T> where T: Ord {
+    type Item = &'a T;
+    type IntoIter = TreeIter<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+
+/// Iterator over `BinaryTree`.
+/// Structure hold's the current state of this iteration.
+#[derive(Debug)]
+pub struct TreeIter<'a, T> {
+    // Stack of references to tree nodes.
+    unvisited: Vec<&'a TreeNode<T>>
+}
+
+
+impl<'a, T: 'a> TreeIter<'a, T> {
+    /// Walk the left edge of the tree, pushing every node seen onto the stack.
+    fn push_left_edge(&mut self, mut tree: &'a BinaryTree<T>) {
+        while let BinaryTree::NonEmpty(ref node) = *tree {
+            self.unvisited.push(node);
+            tree = &node.left;
+        }
+    }
+}
+
+impl<'a, T> Iterator for TreeIter<'a, T> {
+    type Item = &'a T;
+
+    fn next(&mut self) -> Option<&'a T> {
+        // Find next node or return early
+        let node = self.unvisited.pop()?;
+
+        // After node we must produce left-most child in node's right sub-tree.
+        self.push_left_edge(&node.right);
+
+        Some(&node.element)
     }
 }
 
@@ -128,17 +153,6 @@ mod tests {
             tree.add(String::from(planet));
         }
         tree
-    }
-
-    #[test]
-    fn test_iter_initialisation() {
-        // Newly created iterator should contain the two nodes that make up
-        // the left-hand edge of the tree.
-        let tree = create_planets();
-        let iter = tree.iter();
-        assert_eq!(iter.unvisited.len(), 2);
-        assert_eq!(iter.unvisited[0].element, "Mercury");
-        assert_eq!(iter.unvisited[1].element, "Earth");
     }
 
     #[test]
@@ -209,5 +223,30 @@ mod tests {
             })
         );
         assert_eq!(format!("{mars:#?}"), SMALL_TREE_EXPECTED);
+    }
+
+    #[test]
+    fn test_iter_initialisation() {
+        // Newly created iterator should contain the two nodes that make up
+        // the left-hand edge of the tree.
+        let tree = create_planets();
+        let iter = tree.iter();
+        assert_eq!(iter.unvisited.len(), 2);
+        assert_eq!(iter.unvisited[0].element, "Mercury");
+        assert_eq!(iter.unvisited[1].element, "Earth");
+    }
+
+    #[test]
+    fn test_iter() {
+        let tree = create_planets();
+
+        let mut v = Vec::new();
+        for planet in &tree {
+            v.push(planet);
+        }
+        println!("{v:?}");
+        assert_eq!(v, vec![
+            "Earth", "Jupiter", "Mars", "Mercury", "Neptune", "Saturn", "Venus"
+        ]);
     }
 }

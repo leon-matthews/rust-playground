@@ -48,6 +48,14 @@ impl<T: Ord> BinaryTree<T> {
         }
     }
 
+    /// Is our tree empty?
+    pub fn is_empty(&self) -> bool {
+        match self {
+            BinaryTree::Empty => true,
+            _ => false,
+        }
+    }
+
     /// Create iterator over a shared reference
     fn iter(&self) -> TreeIter<T> {
         // Initialise stack with nodes along left-hand edge
@@ -56,6 +64,7 @@ impl<T: Ord> BinaryTree<T> {
         iter
     }
 
+    /// How many nodes does our tree contain?
     pub fn len(&self) -> usize {
         self.iter().count()
     }
@@ -199,6 +208,15 @@ mod tests {
         tree.add("Jupiter");
         tree.add("Mercury");
         assert_eq!(format!("{tree:#?}"), SMALL_TREE_EXPECTED);
+    }
+
+    #[test]
+    fn test_is_empty() {
+        let empty: BinaryTree<i32> = BinaryTree::empty();
+        assert_eq!(empty.is_empty(), true);
+
+        let planets = create_planets();
+        assert_eq!(planets.is_empty(), false);
     }
 
     #[test]

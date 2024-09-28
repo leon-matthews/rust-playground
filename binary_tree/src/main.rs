@@ -3,20 +3,23 @@ use binary_tree::BinaryTree;
 
 
 fn main() {
-    let planets = vec![
+    let list = vec![
         "Mercury",
         "Venus",
         "Earth",
         "Mars",
         "Jupiter",
         "Saturn",
+        "Uranus",
         "Neptune",
     ];
-    println!("{planets:?}");
-
-    let mut tree = BinaryTree::Empty;
-    for planet in planets {
-        tree.add(planet);
+    let mut planets = BinaryTree::Empty;
+    for planet in list {
+        planets.add(String::from(planet));
     }
-    println!("{tree:#?}");
+
+    println!("There are {} planets in our solar system:", planets.len());
+    for planet in &planets {
+        println!("{planet}");
+    }
 }

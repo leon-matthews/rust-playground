@@ -55,6 +55,10 @@ impl<T: Ord> BinaryTree<T> {
         iter.push_left_edge(self);
         iter
     }
+
+    pub fn len(&self) -> usize {
+        self.iter().count()
+    }
 }
 
 
@@ -145,6 +149,7 @@ mod tests {
             "Mars",
             "Jupiter",
             "Saturn",
+            "Uranus",
             "Neptune",
         ];
 
@@ -181,19 +186,26 @@ mod tests {
     }
 
     #[test]
-    fn test_single_node_add() {
+    fn test_add_single_node() {
         let mut tree = BinaryTree::Empty;
         tree.add("Jupiter");
         assert_eq!(format!("{tree:?}"), SINGLE_NODE_EXPECTED);
     }
 
     #[test]
-    fn test_small_tree_add() {
+    fn test_add_small_tree() {
         let mut tree = BinaryTree::Empty;
         tree.add("Mars");
         tree.add("Jupiter");
         tree.add("Mercury");
         assert_eq!(format!("{tree:#?}"), SMALL_TREE_EXPECTED);
+    }
+
+    #[test]
+    fn test_len() {
+        // You heard about Pluto? It's messed up, right?
+        let tree = create_planets();
+        assert_eq!(tree.len(), 8);
     }
 
     #[test]
@@ -244,9 +256,17 @@ mod tests {
         for planet in &tree {
             v.push(planet);
         }
-        println!("{v:?}");
-        assert_eq!(v, vec![
-            "Earth", "Jupiter", "Mars", "Mercury", "Neptune", "Saturn", "Venus"
-        ]);
+
+        let expected = vec![
+            "Earth",
+            "Jupiter",
+            "Mars",
+            "Mercury",
+            "Neptune",
+            "Saturn",
+            "Uranus",
+            "Venus",
+        ];
+        assert_eq!(v, expected);
     }
 }

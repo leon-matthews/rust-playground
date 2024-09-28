@@ -22,15 +22,6 @@ impl<T: Ord> BinaryTree<T> {
         BinaryTree::Empty
     }
 
-    /// Create new BinaryTree with the given root value.
-    pub fn new(value: T) -> Self {
-        BinaryTree::<T>::NonEmpty(Box::new(TreeNode {
-            element: value,
-            left: BinaryTree::Empty,
-            right: BinaryTree::Empty,
-        }))
-    }
-
     /// Add new value to the tree.
     /// Note that nodes, including the root, are not moved during operation.
     pub fn add(&mut self, value: T) {
@@ -57,7 +48,7 @@ impl<T: Ord> BinaryTree<T> {
     }
 
     /// Create iterator over a shared reference
-    fn iter(&self) -> TreeIter<T> {
+    pub fn iter(&self) -> TreeIter<T> {
         // Initialise stack with nodes along left-hand edge
         let mut iter = TreeIter { unvisited: Vec::new() };
         iter.push_left_edge(self);
@@ -67,6 +58,15 @@ impl<T: Ord> BinaryTree<T> {
     /// How many nodes does our tree contain?
     pub fn len(&self) -> usize {
         self.iter().count()
+    }
+
+    /// Create new BinaryTree with the given root value.
+    fn new(value: T) -> Self {
+        BinaryTree::<T>::NonEmpty(Box::new(TreeNode {
+            element: value,
+            left: BinaryTree::Empty,
+            right: BinaryTree::Empty,
+        }))
     }
 }
 

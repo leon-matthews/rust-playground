@@ -13,11 +13,8 @@ fn main() {
         "Uranus",
         "Neptune",
     ];
-    let mut planets = BinaryTree::Empty;
-    for planet in list {
-        planets.add(String::from(planet));
-    }
 
+    let planets = BinaryTree::from_iter(list);
     println!("There are {} planets in our solar system:", planets.len());
     for planet in &planets {
         println!("{planet}");

@@ -71,6 +71,18 @@ impl<T: Ord> BinaryTree<T> {
 }
 
 
+/// Implement FromIterator
+impl<T> FromIterator<T> for BinaryTree<T> where T: Ord {
+    fn from_iter<I: IntoIterator<Item=T>>(iter: I) -> Self {
+        let mut tree = BinaryTree::empty();
+        for item in iter {
+            tree.add(item);
+        }
+        tree
+    }
+}
+
+
 /// Implement the `IntoIterator` trait for `BinaryTree`
 impl<'a, T: 'a> IntoIterator for &'a BinaryTree<T> where T: Ord {
     type Item = &'a T;
@@ -162,11 +174,8 @@ mod tests {
             "Neptune",
         ];
 
-        let mut tree = BinaryTree::empty();
-        for planet in planets {
-            tree.add(String::from(planet));
-        }
-        tree
+        let planets = planets.into_iter().map(|e| String::from(e));
+        BinaryTree::from_iter(planets)
     }
 
     #[test]

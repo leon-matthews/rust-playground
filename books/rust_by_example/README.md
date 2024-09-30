@@ -6,7 +6,6 @@
 
 ## Currently
 
-Working on Chapter 10, *Modules*
+Working on Chapter 15, *Scoping*
 
-https://doc.rust-lang.org/rust-by-example/mod.html
-
+https://doc.rust-lang.org/rust-by-example/scope/lifetime.html

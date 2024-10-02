@@ -3,22 +3,25 @@
 
 
 fn main() {
-    for i in fibonacci().take(40) {
+    for i in Fibonacci::new().take(40) {
         println!("> {}", i);
     }
 }
 
 
-// Returns a Fibonacci sequence generator
-fn fibonacci() -> Fibonacci {
-    Fibonacci { curr: 0, next: 1 }
-}
-
-
-// Hold state
+// Iterator's state
 struct Fibonacci {
     curr: u64,
     next: u64,
+}
+
+
+impl Fibonacci {
+    /// Returns (an almost infinite*) Fibonacci sequence generator
+    /// * It won't finish, just crash when it exceeds its `Item` type capacity.
+    fn new() -> Self {
+        Fibonacci { curr: 0, next: 1 }
+    }
 }
 
 

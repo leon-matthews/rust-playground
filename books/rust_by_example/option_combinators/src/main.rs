@@ -13,6 +13,7 @@ From the Rust glossary:
 fn main() {
     option_map();
     option_and_then();
+    option_defaults();
 }
 
 
@@ -172,4 +173,124 @@ fn have_recipe(food: FancyFood) -> Option<FancyFood> {
         FancyFood::CordonBleu => None,
         _ => Some(food),
     }
+}
+
+
+/**
+Unpack an Option and fall back on a default if it is None.
+
+There are several ways to do this.
+*/
+fn option_defaults() {
+    option_or();
+    option_or_else();
+    option_get_or_insert();
+    option_get_or_insert_with();
+}
+
+
+#[derive(Debug)]
+enum Fruit
+{
+    Apple,
+    Orange,
+    Banana,
+    KiwiFruit,
+    Lemon,
+}
+
+
+/**
+`Option::or()` is chainable, evaluates eagerly, keeps empty value intact.
+
+https://doc.rust-lang.org/core/option/enum.Option.html#method.or
+*/
+fn option_or() {
+    let apple = Some(Fruit::Apple);
+    let orange = Some(Fruit::Orange);
+    let no_fruit: Option<Fruit> = None;
+
+    let first_available_fruit = no_fruit.or(orange).or(apple);
+    println!("first_available_fruit: {:?}", first_available_fruit);
+
+    // Even though `apple` wasn't used, it was still moved out by `or`
+    // error[E0382]: borrow of moved value: `apple`
+    //~ println!("Variable apple was moved, so this line won't compile: {:?}", apple);
+}
+
+/**
+`Option::or_else()` is chainable, evaluates lazily, keeps empty value intact.
+
+https://doc.rust-lang.org/core/option/enum.Option.html#method.or_else
+*/
+fn option_or_else() {
+    let no_fruit: Option<Fruit> = None;
+
+    let get_kiwi_as_fallback = || {
+        println!("Providing kiwi as fallback");
+        Some(Fruit::KiwiFruit)
+    };
+
+    let get_lemon_as_fallback = || {
+        println!("Providing lemon as fallback");
+        Some(Fruit::Lemon)
+    };
+
+    // Note that `get_lemon_as_fallback` is never called
+    let first_available_fruit = no_fruit
+        .or_else(get_kiwi_as_fallback)
+        .or_else(get_lemon_as_fallback);
+    println!("first_available_fruit: {:?}", first_available_fruit);
+}
+
+
+/**
+`Option::get_or_insert()` evaluates eagerly, modifies empty value in place.
+
+To make sure that an Option contains a value, we can use get_or_insert to
+modify it in place with a fallback value, as is shown in the following example.
+Note that get_or_insert eagerly evaluates its parameter, so variable apple is
+moved.
+
+As opposed to `Option::insert()` which always replaces contained value.
+
+https://doc.rust-lang.org/std/option/enum.Option.html#method.get_or_insert
+*/
+fn option_get_or_insert() {
+    // Starts off as None
+    let mut my_fruit: Option<Fruit> = None;
+    println!("my_fruit was: {:?}", my_fruit);
+
+    // About to be (eagerly) moved into function
+    let apple = Fruit::Apple;
+    let first_available_fruit = my_fruit.get_or_insert(apple);
+
+    // None value changed in place
+    println!("my_fruit is: {:?}", my_fruit);
+}
+
+
+/**
+`Option::get_or_insert_with()` evaluates lazily, modifies empty value in place.
+*/
+fn option_get_or_insert_with() {
+    let mut my_fruit: Option<Fruit> = None;
+    println!("my_fruit was: {:?}", my_fruit);
+
+    let get_lemon_as_fallback = || {
+        println!("Providing lemon as fallback");
+        Fruit::Lemon
+    };
+
+    // Closure called (and value modified) ONLY if `my_fruit` is None.
+    let first_available_fruit = my_fruit
+        .get_or_insert_with(get_lemon_as_fallback);
+    println!("first_available_fruit is: {:?}", first_available_fruit);
+    println!("my_fruit is: {:?}", my_fruit);
+
+    // `get_lemon_as_fallback()` is NOT called in this case
+    let mut my_apple = Some(Fruit::Apple);
+    let should_be_apple = my_apple.get_or_insert_with(get_lemon_as_fallback);
+    println!("should_be_apple is: {:?}", should_be_apple);
+    println!("my_apple is unchanged: {:?}", my_apple);
 }

@@ -1,6 +1,3 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
-
 
 fn main() {
     for i in Fibonacci::new().take(40) {

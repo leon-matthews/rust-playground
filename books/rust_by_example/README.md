@@ -6,6 +6,6 @@
 
 ## Currently
 
-Working on Chapter 16, *Traits*
+Working on Chapter 18, *Error Handling*
 
-https://doc.rust-lang.org/rust-by-example/trait/iter.html
+https://doc.rust-lang.org/rust-by-example/error/option_unwrap.html

@@ -8,4 +8,4 @@
 
 Working on Chapter 18, *Error Handling*
 
-https://doc.rust-lang.org/rust-by-example/error/option_unwrap.html
+https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/wrap_error.html

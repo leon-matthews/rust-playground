@@ -6,6 +6,6 @@
 
 ## Currently
 
-Working on Chapter 18, *Error Handling*
+Working on Chapter 19, *Std library types*
 
-https://doc.rust-lang.org/rust-by-example/error/iter_result.html
+https://doc.rust-lang.org/rust-by-example/std.html
